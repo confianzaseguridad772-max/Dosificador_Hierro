@@ -43,7 +43,11 @@ body {
 .logo-area span { color: var(--neon-cyan); }
 
 /* Área de Contenido */
-.app-content { padding: 15px 20px; }
+.app-content { 
+    padding: 15px 20px; 
+    display: flex; 
+    flex-direction: column; /* Permite que el botón suba al ocultar el form */
+}
 
 .field { margin-bottom: 15px; }
 .field label { font-size: 0.65rem; color: var(--neon-cyan); margin-bottom: 5px; display: block; letter-spacing: 1px; }
@@ -54,13 +58,13 @@ input, .cyber-select {
     color: white; font-size: 0.9rem;
 }
 
-/* VISTA DE RESULTADOS (COMPACTA) */
+/* VISTA DE RESULTADOS */
 .result-view {
-    position: relative; /* Para que el botón pueda posicionarse encima si quisiéramos */
     padding: 20px; background: rgba(0, 242, 254, 0.05);
     border-radius: 20px; display: flex; flex-direction: column; align-items: center;
     border: 1px solid rgba(0, 242, 254, 0.2);
     animation: fadeIn 0.4s ease;
+    order: 1; /* Asegura que aparezca primero */
 }
 
 @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } }
@@ -87,8 +91,11 @@ input, .cyber-select {
 
 #resFrascos { font-size: 0.8rem; opacity: 0.8; margin-bottom: 15px; }
 
-/* EL BOTÓN AHORA ES PARTE DEL FLUJO VISIBLE */
-.app-footer { padding: 0 20px 20px; }
+/* FOOTER Y BOTONES */
+.app-footer { 
+    padding: 0 20px 20px; 
+    order: 2; /* El botón seguirá al contenido que esté visible */
+}
 
 .btn-cyber {
     width: 100%; padding: 16px; border-radius: 15px; border: none;
@@ -99,12 +106,13 @@ input, .cyber-select {
 .btn-disabled { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.2); }
 .btn-calc { background: var(--neon-cyan); color: #000; box-shadow: 0 0 20px rgba(0,242,254,0.4); }
 
-/* BOTÓN OK (REGISTRO) - Resaltado */
+/* BOTÓN OK (REGISTRO) */
 .btn-reg { 
     background: var(--neon-purple); 
     color: #fff; 
     box-shadow: 0 0 25px rgba(112,0,255,0.6);
-    animation: pulse 1.5s infinite; /* Para que sepa que debe darle clic aquí */
+    animation: pulse 1.5s infinite;
+    /* Al estar en app-footer y ocultar el form-wrapper, este botón subirá automáticamente */
 }
 
 @keyframes pulse {
@@ -113,8 +121,10 @@ input, .cyber-select {
     100% { transform: scale(1); }
 }
 
-/* OCULTAR FORMULARIO AL MOSTRAR RESULTADO */
+/* CLASES DE CONTROL */
 .hidden { display: none !important; }
 
-/* Esta es la clave: cuando aparece el resultado, el formulario desaparece por completo */
-.form-hidden { display: none; }
+/* IMPORTANTE: Esta clase oculta el formulario y permite que el botón OK suba */
+.form-hidden { 
+    display: none !important; 
+}
