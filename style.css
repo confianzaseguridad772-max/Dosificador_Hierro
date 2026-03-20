@@ -120,3 +120,11 @@ input {
 @keyframes blinker { 50% { opacity: 0; } }
 
 .hidden { display: none !important; }
+
+/* NUEVOS ESTILOS PARA LOGIN Y ADMIN */
+.pay-notice { text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); }
+.pay-notice p { font-size: 0.8rem; opacity: 0.7; margin-bottom: 10px; }
+.btn-wa { display: block; background: #25d366; color: white; text-decoration: none; padding: 12px; border-radius: 15px; font-weight: bold; font-size: 0.9rem; }
+.user-list { margin-top: 20px; max-height: 200px; overflow-y: auto; background: rgba(0,0,0,0.4); border-radius: 15px; padding: 10px; border: 1px solid var(--neon-cyan); }
+.user-item { font-size: 0.7rem; padding: 10px; border-bottom: 1px solid rgba(0,242,254,0.2); line-height: 1.4; }
+.user-item small { color: var(--neon-cyan); }
