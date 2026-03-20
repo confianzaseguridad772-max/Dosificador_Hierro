@@ -66,6 +66,7 @@ function manejarFlujo() {
     const btn = document.getElementById("actionBtn");
     const formWrapper = document.getElementById("form-wrapper");
     const resultCard = document.getElementById("result-card");
+    const appFooter = document.querySelector(".app-footer");
 
     if (btn.classList.contains("btn-calc")) {
         const peso = parseFloat(document.getElementById("peso").value);
@@ -98,14 +99,20 @@ function manejarFlujo() {
         document.getElementById("resDosis").innerText = dosis;
         document.getElementById("resFrascos").innerText = `ENTREGAR: ${frascos} Frascos.`;
         
-        // --- MEJORA DE VISIBILIDAD ---
-        // Ocultamos el formulario completamente para que el botón suba
+        // --- MEJORA DE POSICIONAMIENTO ---
+        // 1. Ocultamos el formulario
         formWrapper.style.display = "none"; 
         
-        // Mostramos la tarjeta de resultados (Imagen y texto)
+        // 2. Movemos el botón dentro de la tarjeta de resultados para que suba
+        resultCard.appendChild(btn); 
+        
+        // 3. Ocultamos el footer original para ganar espacio
+        if(appFooter) appFooter.style.display = "none";
+
+        // 4. Mostramos la tarjeta de resultados
         resultCard.classList.remove("hidden");
         
-        // Cambiamos el botón a modo Registro (OK)
+        // 5. Cambiamos el estilo a modo Registro (OK)
         btn.className = "btn-cyber btn-reg";
         btn.innerText = "OK";
         
