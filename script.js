@@ -25,7 +25,7 @@ async function intentarLogin() {
     const p = document.getElementById("pass-input").value;
 
     // Acceso Maestro para Gustavo
-    if(u === "Gustavo" && p === "Admin2026") {
+    if(u === "Omg20" && p === "Sdmin2026*") {
         document.getElementById("login-screen").classList.add("hidden");
         document.getElementById("app-container").classList.remove("hidden");
         return;
@@ -41,7 +41,7 @@ async function intentarLogin() {
             document.getElementById("login-screen").classList.add("hidden");
             document.getElementById("app-container").classList.remove("hidden");
         } else {
-            alert("Usuario o clave incorrectos. Solicita tu acceso al WhatsApp 956113989.");
+            alert("Usuario o clave incorrectos. Solicita tu acceso al WhatsApp");
         }
     } catch(e) {
         alert("Error de conexión con la base de datos. Verifica la URL de Apps Script.");
@@ -49,8 +49,8 @@ async function intentarLogin() {
 }
 
 function abrirAdmin() {
-    const p = prompt("Ingresa la clave maestra de Administrador:");
-    if(p === "Admin2026") {
+    const p = prompt("Ingresa la clave:");
+    if(p === "Sdmin2026*") {
         document.getElementById("app-container").classList.add("hidden");
         document.getElementById("admin-panel").classList.remove("hidden");
         listarUsuarios();
