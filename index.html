@@ -2,10 +2,10 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dosificador Pediátrico PRO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DOSIS HIERRO PRO v7</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
     <div id="bg-peru" class="cyber-bg"></div>
@@ -20,74 +20,66 @@
                     <p>SISTEMA 2026 - PERÚ</p>
                 </div>
             </div>
-            <div class="counter-box">
-                <span class="label">Ver:</span>
-                <span id="numConsultas" class="glitch-number">0</span>
-            </div>
+            <div class="version-box">Consultas: <span id="numConsultas">0</span></div>
         </header>
 
         <section class="app-content">
             <div id="form-wrapper">
-                <div class="glass-input-group">
+                <div class="input-grid">
                     <div class="field">
-                        <label>PESO DEL BEBÉ (KG)</label>
+                        <label>PESO BEBÉ (KG)</label>
                         <input type="number" id="peso" placeholder="0.0" step="0.1" oninput="validar()">
                     </div>
                     <div class="field">
-                        <label>MESES DE CONSUMO</label>
+                        <label>MESES</label>
                         <input type="number" id="meses" value="1" min="1" oninput="validar()">
                     </div>
                 </div>
 
                 <div class="field">
-                    <label>MOTIVO</label>
-                    <select id="esquema" class="cyber-select" onchange="validar()">
-                        <option value="" disabled selected>Seleccione</option>
-                        <option value="2">🛡️ PREVENCIÓN (2mg)</option>
-                        <option value="3">💊 TRATAMIENTO ANEMIA (3mg)</option>
-                    </select>
+                    <label>FINALIDAD DEL SUPLEMENTO</label>
+                    <div class="cyber-options" id="options-esquema">
+                        <button type="button" class="option-btn" data-value="2" onclick="seleccionarOpcion('esquema', this)">PREVENCIÓN (2mg)</button>
+                        <button type="button" class="option-btn" data-value="3" onclick="seleccionarOpcion('esquema', this)">TRATAMIENTO (3mg)</button>
+                    </div>
+                    <input type="hidden" id="esquema" value="">
                 </div>
 
                 <div class="field">
-                    <label>PRESENTACIÓN DEL HIERRO</label>
-                    <select id="tipoHierro" class="cyber-select" onchange="actualizarImagen(); validar();">
-                        <option value="" disabled selected>Seleccione</option>
-                        <option value="polimaltosado_g">💧 Gotas Polimaltosado</option>
-                        <option value="sulfato_g">💧 Gotas Sulfato Ferroso</option>
-                        <option value="sulfato_j">🍶 Jarabe Sulfato Ferroso</option>
-                        <option value="polimaltosado_j">🍶 Jarabe Polimaltosado</option>
-                        <option value="micronutrientes">✨ Micronutrientes</option>
-                    </select>
+                    <label>PRESENTACIÓN DE HIERRO</label>
+                    <div class="cyber-options grid-options" id="options-tipoHierro">
+                        <button type="button" class="option-btn" data-value="polimaltosado_g" onclick="seleccionarOpcion('tipoHierro', this)">Gotas Polimal.</button>
+                        <button type="button" class="option-btn" data-value="sulfato_g" onclick="seleccionarOpcion('tipoHierro', this)">Gotas Sulfato</button>
+                        <button type="button" class="option-btn" data-value="sulfato_j" onclick="seleccionarOpcion('tipoHierro', this)">Jarabe Sulfato</button>
+                        <button type="button" class="option-btn" data-value="polimaltosado_j" onclick="seleccionarOpcion('tipoHierro', this)">Jarabe Polimal.</button>
+                        <button type="button" class="option-btn full-width" data-value="micronutrientes" onclick="seleccionarOpcion('tipoHierro', this)">Micronutrientes (Sachet)</button>
+                    </div>
+                    <input type="hidden" id="tipoHierro" value="">
                 </div>
 
                 <div id="alerta-clinica" class="cyber-alert hidden">
-                    <span class="blink">⚡</span>
+                    <span class="blink">⚠</span>
                     <p id="msg-alerta"></p>
                 </div>
             </div>
 
             <div id="result-card" class="result-view hidden">
                 <div class="image-scanner">
-                    <img id="imgHierro" src="" alt="Cargando...">
+                    <img id="imgHierro" src="" alt="Producto">
                     <div class="scan-line"></div>
                 </div>
-                <div class="data-screen" style="text-align: center;">
-                    <span class="data-label">DOSIS DIARIA</span>
+                <div class="data-screen">
+                    <span class="data-label">DOSIS DIARIA RECOMENDADA</span>
                     <h2 id="resDosis">---</h2>
                     <div class="separator"></div>
-                    <p id="resFrascos">CANTIDAD FRASCO: 0 UNIDADES</p>
+                    <p id="resFrascos">ENTREGAR: 0 Frascos.</p>
                 </div>
-
-                <button id="btn-ok-result" class="btn-cyber btn-reg hidden" onclick="manejarFlujo()">
-                    OK
-                </button>
+                <button id="okBtn" class="btn-cyber btn-reg" onclick="registrarYReiniciar()">OK - REGISTRAR</button>
             </div>
         </section>
 
-        <footer class="app-footer" id="main-footer">
-            <button id="actionBtn" class="btn-cyber btn-disabled" onclick="manejarFlujo()" disabled>
-                DOSIFICAR
-            </button>
+        <footer class="app-footer" id="app-footer">
+            <button id="actionBtn" class="btn-cyber btn-disabled" onclick="calcularDosis()" disabled>CALCULAR DOSIS</button>
         </footer>
     </div>
 
