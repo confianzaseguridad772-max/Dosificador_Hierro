@@ -20,7 +20,7 @@
                     <p>SISTEMA 2026 - PERÚ</p>
                 </div>
             </div>
-            <div class="version-box">Consultas: <span id="numConsultas">0</span></div>
+            <div class="version-box">Puntos: <span id="numConsultas">0</span></div>
         </header>
 
         <section class="app-content">
@@ -31,16 +31,16 @@
                         <input type="number" id="peso" placeholder="0.0" step="0.1" oninput="validar()">
                     </div>
                     <div class="field">
-                        <label>MESES TRATAMIENTO</label>
+                        <label>MESES</label>
                         <input type="number" id="meses" value="1" min="1" oninput="validar()">
                     </div>
                 </div>
 
                 <div class="field">
-                    <label>FINALIDAD DEL SUPLEMENTO</label>
+                    <label>FINALIDAD</label>
                     <div class="cyber-options" id="options-esquema">
-                        <button type="button" class="option-btn" data-value="2" onclick="seleccionarOpcion('esquema', this)">🛡️ PREVENCIÓN (2mg)</button>
-                        <button type="button" class="option-btn" data-value="3" onclick="seleccionarOpcion('esquema', this)">💊 TRATAMIENTO (3mg)</button>
+                        <button type="button" class="option-btn" data-value="2" onclick="seleccionarOpcion('esquema', this)">PREVENCIÓN (2mg)</button>
+                        <button type="button" class="option-btn" data-value="3" onclick="seleccionarOpcion('esquema', this)">TRATAMIENTO (3mg)</button>
                     </div>
                     <input type="hidden" id="esquema" value="">
                 </div>
@@ -48,11 +48,11 @@
                 <div class="field">
                     <label>PRESENTACIÓN DE HIERRO</label>
                     <div class="cyber-options grid-options" id="options-tipoHierro">
-                        <button type="button" class="option-btn" data-value="polimaltosado_g" onclick="seleccionarOpcion('tipoHierro', this)">💧 Gotas Polimal.</button>
-                        <button type="button" class="option-btn" data-value="sulfato_g" onclick="seleccionarOpcion('tipoHierro', this)">💧 Gotas Sulfato</button>
-                        <button type="button" class="option-btn" data-value="sulfato_j" onclick="seleccionarOpcion('tipoHierro', this)">🍶 Jarabe Sulfato</button>
-                        <button type="button" class="option-btn" data-value="polimaltosado_j" onclick="seleccionarOpcion('tipoHierro', this)">🍶 Jarabe Polimal.</button>
-                        <button type="button" class="option-btn full-width" data-value="micronutrientes" onclick="seleccionarOpcion('tipoHierro', this)">✨ Micronutrientes</button>
+                        <button type="button" class="option-btn" data-value="polimaltosado_g" onclick="seleccionarOpcion('tipoHierro', this)">Gotas Polimal.</button>
+                        <button type="button" class="option-btn" data-value="sulfato_g" onclick="seleccionarOpcion('tipoHierro', this)">Gotas Sulfato</button>
+                        <button type="button" class="option-btn" data-value="sulfato_j" onclick="seleccionarOpcion('tipoHierro', this)">Jarabe Sulfato</button>
+                        <button type="button" class="option-btn" data-value="polimaltosado_j" onclick="seleccionarOpcion('tipoHierro', this)">Jarabe Polimal.</button>
+                        <button type="button" class="option-btn full-width" data-value="micronutrientes" onclick="seleccionarOpcion('tipoHierro', this)">Micronutrientes</button>
                     </div>
                     <input type="hidden" id="tipoHierro" value="">
                 </div>
@@ -65,13 +65,12 @@
 
             <div id="result-card" class="result-view hidden">
                 <div class="image-scanner">
-                    <img id="imgHierro" src="" alt="Producto">
+                    <img id="imgHierro" src="" alt="Seleccione producto">
                     <div class="scan-line"></div>
                 </div>
                 <div class="data-screen">
                     <span class="data-label">DOSIS DIARIA</span>
                     <h2 id="resDosis">---</h2>
-                    <div class="separator"></div>
                     <p id="resFrascos">ENTREGAR: 0 Frascos.</p>
                 </div>
                 <button id="okBtn" class="btn-cyber btn-reg" onclick="registrarYReiniciar()">OK - REGISTRAR</button>
@@ -79,10 +78,9 @@
         </section>
 
         <footer class="app-footer" id="app-footer">
-            <button id="actionBtn" class="btn-cyber btn-disabled" onclick="calcularDosis()" disabled>CALCULAR DOSIS</button>
+            <button id="actionBtn" class="btn-cyber btn-disabled" onclick="calcularDosis()" disabled>DOSIFICAR</button>
         </footer>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
