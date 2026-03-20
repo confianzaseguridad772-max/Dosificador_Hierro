@@ -1,7 +1,5 @@
 const IMGS_PATH = "img/"; 
-
-// ID ÚNICO PARA TU APP (No lo cambies para que PC y Celular se conecten al mismo sitio)
-const USER_TOKEN = "77e68224"; // Token asignado para tu proyecto
+const USER_TOKEN = "77e68224"; // ID único para tu base de datos
 const KEY_NAME = "puntosGustavo2026"; 
 const API_BASE = `https://api.keyvalue.xyz/${USER_TOKEN}/${KEY_NAME}`;
 
@@ -16,7 +14,6 @@ window.onload = () => {
     cambiarFondo();
 };
 
-// Trae los puntos desde la nube (Keyvalue.xyz)
 async function obtenerPuntosGlobales() {
     try {
         const res = await fetch(API_BASE);
@@ -24,7 +21,6 @@ async function obtenerPuntosGlobales() {
         const valor = await res.text();
         document.getElementById("numConsultas").innerText = valor || 0;
     } catch (err) {
-        // Respaldo local si no hay internet
         let local = localStorage.getItem("puntosClinicos") || 0;
         document.getElementById("numConsultas").innerText = local;
     }
@@ -71,10 +67,10 @@ function validar() {
 
     if (peso > 0 && tipo) {
         if (tipo.includes("_g") && peso > 12) {
-            msg.innerText = "Peso alto para gotas (>12kg). Se sugiere Jarabe.";
+            msg.innerText = "Peso alto para gotas. Sugerido: Jarabe.";
             alerta.classList.remove("hidden");
         } else if (tipo.includes("_j") && peso < 8) {
-            msg.innerText = "Peso bajo para jarabe (<8kg). Se sugiere Gotas.";
+            msg.innerText = "Peso bajo para jarabe. Sugerido: Gotas.";
             alerta.classList.remove("hidden");
         } else {
             alerta.classList.add("hidden");
@@ -126,26 +122,18 @@ function calcularDosis() {
     document.getElementById("okBtn").classList.remove("hidden");
 }
 
-// Registra el punto sumando 7 al valor actual de la nube
 async function registrarYReiniciar() {
     try {
-        // 1. Obtener valor actual de la nube
         const res = await fetch(API_BASE);
         let actual = 0;
         if (res.ok) {
             const texto = await res.text();
             actual = parseInt(texto) || 0;
         }
-        
-        // 2. Sumar 7 y enviar (POST)
         let nuevoTotal = actual + 7;
         await fetch(`${API_BASE}/${nuevoTotal}`, { method: 'POST' });
-        
-        // 3. Guardar en local solo por seguridad
         localStorage.setItem("puntosClinicos", nuevoTotal);
-
     } catch (err) {
-        // Si falla internet, suma al local
         let local = parseInt(localStorage.getItem("puntosClinicos")) || 0;
         localStorage.setItem("puntosClinicos", local + 7);
     }
