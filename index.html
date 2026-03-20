@@ -37,7 +37,7 @@
                 </div>
 
                 <div class="field">
-                    <label>FINALIDAD DEL SUPLEMENTO</label>
+                    <label>FINALIDAD DEL HIERRO</label>
                     <div class="cyber-options" id="options-esquema">
                         <button type="button" class="option-btn" data-value="2" onclick="seleccionarOpcion('esquema', this)">🛡️ PREVENCIÓN (2mg)</button>
                         <button type="button" class="option-btn" data-value="3" onclick="seleccionarOpcion('esquema', this)">💊 TRATAMIENTO (3mg)</button>
@@ -46,7 +46,7 @@
                 </div>
 
                 <div class="field">
-                    <label>PRESENTACIÓN DE HIERRO</label>
+                    <label>PRESENTACIÓN</label>
                     <div class="cyber-options grid-options" id="options-tipoHierro">
                         <button type="button" class="option-btn" data-value="polimaltosado_g" onclick="seleccionarOpcion('tipoHierro', this)">Gotas Polimal.</button>
                         <button type="button" class="option-btn" data-value="sulfato_g" onclick="seleccionarOpcion('tipoHierro', this)">Gotas Sulfato</button>
@@ -69,16 +69,16 @@
                     <div class="scan-line"></div>
                 </div>
                 <div class="data-screen">
-                    <span class="data-label">DOSIS DIARIA RECOMENDADA</span>
+                    <span class="data-label">DOSIS DIARIA</span>
                     <h2 id="resDosis">---</h2>
                     <p id="resFrascos">ENTREGAR: 0 Unidades.</p>
                 </div>
-                <button id="okBtn" class="btn-cyber btn-reg hidden" onclick="registrarYReiniciar()">OK - REGISTRAR PUNTOS</button>
+                <button id="okBtn" class="btn-cyber btn-reg hidden" onclick="registrarYReiniciar()">OK</button>
             </div>
         </section>
 
         <footer class="app-footer" id="app-footer">
-            <button id="actionBtn" class="btn-cyber btn-disabled" onclick="calcularDosis()" disabled>CALCULAR DOSIFICACIÓN</button>
+            <button id="actionBtn" class="btn-cyber btn-disabled" onclick="calcularDosis()" disabled>CALCULAR DOSIS</button>
         </footer>
     </div>
 
