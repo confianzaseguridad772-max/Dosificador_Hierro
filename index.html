@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dosificador Pediátrico PRO</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="bg-peru" class="cyber-bg"></div>
+    <div class="overlay"></div>
+
+    <div class="main-card">
+        <header class="cyber-header">
+            <div class="logo-area">
+                <div class="neon-circle">⚕️</div>
+                <div>
+                    <h1>DOSIS<span>HIERRO</span></h1>
+                    <p>SISTEMA 2026 - PERÚ</p>
+                </div>
+            </div>
+            <div class="counter-box">
+                <span class="label">Ver:</span>
+                <span id="numConsultas" class="glitch-number">0</span>
+            </div>
+        </header>
+
+        <section class="app-content">
+            <div id="form-wrapper">
+                <div class="glass-input-group">
+                    <div class="field">
+                        <label>PESO DEL BEBÉ (KG)</label>
+                        <input type="number" id="peso" placeholder="0.0" step="0.1" oninput="validar()">
+                    </div>
+                    <div class="field">
+                        <label>MESES DE CONSUMO</label>
+                        <input type="number" id="meses" value="1" min="1" oninput="validar()">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>MOTIVO</label>
+                    <select id="esquema" class="cyber-select" onchange="validar()">
+                        <option value="" disabled selected>Seleccione</option>
+                        <option value="2">🛡️ PREVENCIÓN (2mg)</option>
+                        <option value="3">💊 TRATAMIENTO ANEMIA (3mg)</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>PRESENTACIÓN DEL HIERRO</label>
+                    <select id="tipoHierro" class="cyber-select" onchange="actualizarImagen(); validar();">
+                        <option value="" disabled selected>Seleccione</option>
+                        <option value="polimaltosado_g">💧 Gotas Polimaltosado</option>
+                        <option value="sulfato_g">💧 Gotas Sulfato Ferroso</option>
+                        <option value="sulfato_j">🍶 Jarabe Sulfato Ferroso</option>
+                        <option value="polimaltosado_j">🍶 Jarabe Polimaltosado</option>
+                        <option value="micronutrientes">✨ Micronutrientes</option>
+                    </select>
+                </div>
+
+                <div id="alerta-clinica" class="cyber-alert hidden">
+                    <span class="blink">⚡</span>
+                    <p id="msg-alerta"></p>
+                </div>
+            </div>
+
+            <div id="result-card" class="result-view hidden">
+                <div class="image-scanner">
+                    <img id="imgHierro" src="" alt="Cargando...">
+                    <div class="scan-line"></div>
+                </div>
+                <div class="data-screen">
+                    <span class="data-label">DOSIS DIARIA</span>
+                    <h2 id="resDosis">---</h2>
+                    <div class="separator"></div>
+                    <p id="resFrascos">CANTIDAD FRASCO: 0 UNIDADES</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="app-footer">
+            <button id="actionBtn" class="btn-cyber btn-disabled" onclick="manejarFlujo()" disabled>
+                DOSIFICAR
+            </button>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
