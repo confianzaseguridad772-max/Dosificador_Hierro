@@ -17,6 +17,7 @@ function cambiarFondo() {
     document.getElementById("bg-peru").style.background = `url('${bg}')`;
 }
 
+// Selección de opciones táctiles
 function seleccionarOpcion(idHidden, elemento) {
     const botones = elemento.parentElement.querySelectorAll('.option-btn');
     botones.forEach(btn => btn.classList.remove('selected'));
@@ -25,11 +26,14 @@ function seleccionarOpcion(idHidden, elemento) {
     const valor = elemento.getAttribute('data-value');
     document.getElementById(idHidden).value = valor;
 
-    // ACTUALIZA FOTO AL INSTANTE
+    // ACTUALIZACIÓN DE FOTO INSTANTÁNEA
     if(idHidden === 'tipoHierro') {
         const img = document.getElementById("imgHierro");
         img.src = IMGS_PATH + valor + ".jpg";
+        
+        // Mostramos la tarjeta para ver la foto, pero aseguramos que el OK siga oculto
         document.getElementById("result-card").classList.remove("hidden");
+        document.getElementById("okBtn").classList.add("hidden"); 
     }
     validar();
 }
@@ -42,13 +46,13 @@ function validar() {
     const alerta = document.getElementById("alerta-clinica");
     const msg = document.getElementById("msg-alerta");
 
-    // Alertas Clínicas por Peso
+    // Lógica de seguridad clínica
     if (peso > 0 && tipo) {
         if (tipo.includes("_g") && peso > 12) {
-            msg.innerText = "Peso alto para gotas. Sugerido: Jarabe.";
+            msg.innerText = "Peso alto para gotas (>12kg). Se sugiere Jarabe.";
             alerta.classList.remove("hidden");
         } else if (tipo.includes("_j") && peso < 8) {
-            msg.innerText = "Peso bajo para jarabe. Sugerido: Gotas.";
+            msg.innerText = "Peso bajo para jarabe (<8kg). Se sugiere Gotas.";
             alerta.classList.remove("hidden");
         } else {
             alerta.classList.add("hidden");
@@ -67,8 +71,8 @@ function validar() {
 function calcularDosis() {
     const peso = parseFloat(document.getElementById("peso").value);
     const tipo = document.getElementById("tipoHierro").value;
-    const esquema = parseFloat(document.getElementById("esquema").value);
     const meses = parseInt(document.getElementById("meses").value) || 1;
+    const esquema = parseFloat(document.getElementById("esquema").value);
     
     let mgDia = peso * esquema;
     let dosis = ""; let frascos = 0;
@@ -94,10 +98,13 @@ function calcularDosis() {
     document.getElementById("resDosis").innerText = dosis;
     document.getElementById("resFrascos").innerText = `ENTREGAR: ${frascos} Frascos.`;
     
-    // FLUJO: Ocultar form para que el botón OK suba
+    // FLUJO DE INTERFAZ
     document.getElementById("form-wrapper").classList.add("hidden");
     document.getElementById("app-footer").classList.add("hidden");
     document.getElementById("result-card").classList.remove("hidden");
+
+    // MOSTRAR BOTÓN OK AHORA QUE SE CALCULÓ
+    document.getElementById("okBtn").classList.remove("hidden");
 }
 
 function registrarYReiniciar() {
