@@ -71,16 +71,20 @@
                     <img id="imgHierro" src="" alt="Cargando...">
                     <div class="scan-line"></div>
                 </div>
-                <div class="data-screen">
+                <div class="data-screen" style="text-align: center;">
                     <span class="data-label">DOSIS DIARIA</span>
                     <h2 id="resDosis">---</h2>
                     <div class="separator"></div>
                     <p id="resFrascos">CANTIDAD FRASCO: 0 UNIDADES</p>
                 </div>
+
+                <button id="btn-ok-result" class="btn-cyber btn-reg hidden" onclick="manejarFlujo()">
+                    OK
+                </button>
             </div>
         </section>
 
-        <footer class="app-footer">
+        <footer class="app-footer" id="main-footer">
             <button id="actionBtn" class="btn-cyber btn-disabled" onclick="manejarFlujo()" disabled>
                 DOSIFICAR
             </button>
