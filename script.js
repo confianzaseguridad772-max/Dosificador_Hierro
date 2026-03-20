@@ -5,7 +5,7 @@ const API_BASE = `https://api.keyvalue.xyz/${USER_TOKEN}/${KEY_NAME}`;
 
 // --- CONEXIÓN A GOOGLE SHEETS ---
 // Reemplaza esta URL con la que obtuviste de Extensiones > Apps Script > Implementar
-const API_USERS = "https://script.google.com/macros/s/AKfycbwUa5b8rDshT-FMB01oQY_syd5eR3GfkdE0DfF2048KjKSBPXNq6b_L_OV7HovDgWn7/exec";
+const API_USERS = "https://script.google.com/macros/s/AKfycbyevNF0dg4V_3PjldD97IbOfaB57_FY2Wn1dX-7bwKWUMXgO6FTDClge-0-3yPJcO_TPw/exec";
 
 const paisajesPeru = [
     "https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=1600",
