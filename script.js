@@ -5,7 +5,7 @@ const API_BASE = `https://api.keyvalue.xyz/${USER_TOKEN}/${KEY_NAME}`;
 
 // --- CONEXIÓN A GOOGLE SHEETS ---
 // Reemplaza esta URL con la que obtuviste de Extensiones > Apps Script > Implementar
-const API_USERS = "TU_URL_DE_APPS_SCRIPT_AQUI";
+const API_USERS = "https://script.google.com/macros/s/AKfycbyt6H9iejXZcu-tFUU2pW2UWYYKpe2XUovoj5FymodW9ojN1QV26vN0LUQKhuILZPj6lA/exec";
 
 const paisajesPeru = [
     "https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=1600",
