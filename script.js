@@ -1,7 +1,9 @@
 const IMGS_PATH = "img/"; 
-// Nombre de la llave para tu contador global (puedes cambiar 'dosis_hierro_peru_2026' por lo que quieras)
-const NAMESPACE = "dosis_hierro_peru_2026";
-const KEY = "consultas_totales";
+
+// ID ÚNICO PARA TU APP (No lo cambies para que PC y Celular se conecten al mismo sitio)
+const USER_TOKEN = "77e68224"; // Token asignado para tu proyecto
+const KEY_NAME = "puntosGustavo2026"; 
+const API_BASE = `https://api.keyvalue.xyz/${USER_TOKEN}/${KEY_NAME}`;
 
 const paisajesPeru = [
     "https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=1600",
@@ -14,14 +16,15 @@ window.onload = () => {
     cambiarFondo();
 };
 
-// NUEVA FUNCIÓN: Trae los puntos desde la nube al cargar
+// Trae los puntos desde la nube (Keyvalue.xyz)
 async function obtenerPuntosGlobales() {
     try {
-        const res = await fetch(`https://api.countapi.xyz/get/${NAMESPACE}/${KEY}`);
-        const data = await res.json();
-        document.getElementById("numConsultas").innerText = data.value || 0;
+        const res = await fetch(API_BASE);
+        if (!res.ok) throw new Error();
+        const valor = await res.text();
+        document.getElementById("numConsultas").innerText = valor || 0;
     } catch (err) {
-        // Si hay error de red, muestra el local como respaldo
+        // Respaldo local si no hay internet
         let local = localStorage.getItem("puntosClinicos") || 0;
         document.getElementById("numConsultas").innerText = local;
     }
@@ -123,13 +126,26 @@ function calcularDosis() {
     document.getElementById("okBtn").classList.remove("hidden");
 }
 
-// NUEVA FUNCIÓN: Registra el punto en la nube antes de recargar
+// Registra el punto sumando 7 al valor actual de la nube
 async function registrarYReiniciar() {
     try {
-        // Incrementa el valor en la API global
-        await fetch(`https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`);
+        // 1. Obtener valor actual de la nube
+        const res = await fetch(API_BASE);
+        let actual = 0;
+        if (res.ok) {
+            const texto = await res.text();
+            actual = parseInt(texto) || 0;
+        }
+        
+        // 2. Sumar 7 y enviar (POST)
+        let nuevoTotal = actual + 7;
+        await fetch(`${API_BASE}/${nuevoTotal}`, { method: 'POST' });
+        
+        // 3. Guardar en local solo por seguridad
+        localStorage.setItem("puntosClinicos", nuevoTotal);
+
     } catch (err) {
-        // Respaldo local si falla el internet
+        // Si falla internet, suma al local
         let local = parseInt(localStorage.getItem("puntosClinicos")) || 0;
         localStorage.setItem("puntosClinicos", local + 7);
     }
