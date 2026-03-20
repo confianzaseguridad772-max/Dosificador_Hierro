@@ -8,8 +8,7 @@ const paisajesPeru = [
 ];
 
 window.onload = () => {
-    const counter = document.getElementById("numConsultas");
-    if(counter) counter.innerText = totalPuntos;
+    document.getElementById("numConsultas").innerText = totalPuntos;
     cambiarFondo();
 };
 
@@ -18,28 +17,22 @@ function cambiarFondo() {
     document.getElementById("bg-peru").style.background = `url('${bg}')`;
 }
 
-// Función para manejar los botones de opción (Finalidad y Presentación)
+// Lógica de los nuevos botones de opción
 function seleccionarOpcion(idHidden, elemento) {
-    // 1. Quitar selección previa de los botones hermanos
     const botones = elemento.parentElement.querySelectorAll('.option-btn');
     botones.forEach(btn => btn.classList.remove('selected'));
-    
-    // 2. Marcar el actual
     elemento.classList.add('selected');
     
-    // 3. Asignar valor al input oculto
     const valor = elemento.getAttribute('data-value');
     document.getElementById(idHidden).value = valor;
 
-    // 4. MEJORA: Mostrar foto instantáneamente al elegir presentación
+    // MOSTRAR FOTO AL SELECCIONAR PRESENTACIÓN
     if(idHidden === 'tipoHierro') {
         const img = document.getElementById("imgHierro");
         img.src = IMGS_PATH + valor + ".jpg";
-        
-        // Mostrar la tarjeta de resultados (vacía por ahora) para ver la foto
+        // Mostramos el contenedor de resultados para que se vea la foto antes de calcular
         document.getElementById("result-card").classList.remove("hidden");
     }
-
     validar();
 }
 
@@ -51,20 +44,20 @@ function validar() {
     const alerta = document.getElementById("alerta-clinica");
     const msg = document.getElementById("msg-alerta");
 
-    // Alertas de seguridad por peso
+    // Alertas de seguridad clínica
     if (peso > 0 && tipo) {
         if (tipo.includes("_g") && peso > 12) {
-            msg.innerText = "ALERTA: El peso es alto para gotas. Se sugiere Jarabe.";
+            msg.innerText = "Peso elevado para Gotas (>12kg). Sugerido: Jarabe.";
             alerta.classList.remove("hidden");
         } else if (tipo.includes("_j") && peso < 8) {
-            msg.innerText = "ALERTA: El peso es bajo para jarabe. Se sugiere Gotas.";
+            msg.innerText = "Peso bajo para Jarabe (<8kg). Sugerido: Gotas.";
             alerta.classList.remove("hidden");
         } else {
             alerta.classList.add("hidden");
         }
     }
 
-    // Habilitar botón principal
+    // Habilitar botón si todo está completo
     if (peso > 0 && esquema && tipo) {
         btn.disabled = false;
         btn.className = "btn-cyber btn-calc";
@@ -83,6 +76,7 @@ function calcularDosis() {
     let mgDia = peso * esquema;
     let dosis = ""; let frascos = 0;
 
+    // Lógica de cálculo por tipo de producto
     switch(tipo) {
         case "polimaltosado_g": 
             dosis = Math.round(mgDia / 2.5) + " gotas"; 
@@ -104,19 +98,14 @@ function calcularDosis() {
     document.getElementById("resDosis").innerText = dosis;
     document.getElementById("resFrascos").innerText = `ENTREGAR: ${frascos} Frascos.`;
     
-    // --- ACCIÓN DE LA FLECHA ROJA ---
-    // Ocultamos el formulario y el footer original
+    // TRANSICIÓN FINAL: Ocultar form para que el botón OK suba
     document.getElementById("form-wrapper").classList.add("hidden");
     document.getElementById("app-footer").classList.add("hidden");
-    
-    // Mostramos la tarjeta de resultados con el botón OK integrado
     document.getElementById("result-card").classList.remove("hidden");
 }
 
 function registrarYReiniciar() {
-    // Sumar puntos y guardar
     totalPuntos += 7;
     localStorage.setItem("puntosClinicos", totalPuntos);
-    // Recargar página para nueva consulta
     location.reload(); 
 }
