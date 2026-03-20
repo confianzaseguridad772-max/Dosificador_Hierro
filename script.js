@@ -95,7 +95,7 @@ function calcularDosis() {
     const esquema = parseFloat(document.getElementById("esquema").value);
     
     let mgDia = peso * esquema;
-    let dosis = ""; let frascosS = 0;
+    let dosis = ""; let frascos = 0;
 
     switch(tipo) {
         case "polimaltosado_g": 
@@ -116,7 +116,7 @@ function calcularDosis() {
     }
 
     document.getElementById("resDosis").innerText = dosis;
-    document.getElementById("resFrascos").innerText = `ENTREGAR: ${frascos} Frascos.`;
+    document.getElementById("resFrascos").innerText = `ENTREGAR: ${frascos} Unidades.`;
     
     document.getElementById("form-wrapper").classList.add("hidden");
     document.getElementById("app-footer").classList.add("hidden");
