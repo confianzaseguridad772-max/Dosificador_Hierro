@@ -17,7 +17,6 @@ function cambiarFondo() {
     document.getElementById("bg-peru").style.background = `url('${bg}')`;
 }
 
-// Lógica de los nuevos botones de opción
 function seleccionarOpcion(idHidden, elemento) {
     const botones = elemento.parentElement.querySelectorAll('.option-btn');
     botones.forEach(btn => btn.classList.remove('selected'));
@@ -26,11 +25,10 @@ function seleccionarOpcion(idHidden, elemento) {
     const valor = elemento.getAttribute('data-value');
     document.getElementById(idHidden).value = valor;
 
-    // MOSTRAR FOTO AL SELECCIONAR PRESENTACIÓN
+    // ACTUALIZA FOTO AL INSTANTE
     if(idHidden === 'tipoHierro') {
         const img = document.getElementById("imgHierro");
         img.src = IMGS_PATH + valor + ".jpg";
-        // Mostramos el contenedor de resultados para que se vea la foto antes de calcular
         document.getElementById("result-card").classList.remove("hidden");
     }
     validar();
@@ -44,20 +42,19 @@ function validar() {
     const alerta = document.getElementById("alerta-clinica");
     const msg = document.getElementById("msg-alerta");
 
-    // Alertas de seguridad clínica
+    // Alertas Clínicas por Peso
     if (peso > 0 && tipo) {
         if (tipo.includes("_g") && peso > 12) {
-            msg.innerText = "Peso elevado para Gotas (>12kg). Sugerido: Jarabe.";
+            msg.innerText = "Peso alto para gotas. Sugerido: Jarabe.";
             alerta.classList.remove("hidden");
         } else if (tipo.includes("_j") && peso < 8) {
-            msg.innerText = "Peso bajo para Jarabe (<8kg). Sugerido: Gotas.";
+            msg.innerText = "Peso bajo para jarabe. Sugerido: Gotas.";
             alerta.classList.remove("hidden");
         } else {
             alerta.classList.add("hidden");
         }
     }
 
-    // Habilitar botón si todo está completo
     if (peso > 0 && esquema && tipo) {
         btn.disabled = false;
         btn.className = "btn-cyber btn-calc";
@@ -70,13 +67,12 @@ function validar() {
 function calcularDosis() {
     const peso = parseFloat(document.getElementById("peso").value);
     const tipo = document.getElementById("tipoHierro").value;
-    const meses = parseInt(document.getElementById("meses").value) || 1;
     const esquema = parseFloat(document.getElementById("esquema").value);
+    const meses = parseInt(document.getElementById("meses").value) || 1;
     
     let mgDia = peso * esquema;
     let dosis = ""; let frascos = 0;
 
-    // Lógica de cálculo por tipo de producto
     switch(tipo) {
         case "polimaltosado_g": 
             dosis = Math.round(mgDia / 2.5) + " gotas"; 
@@ -98,7 +94,7 @@ function calcularDosis() {
     document.getElementById("resDosis").innerText = dosis;
     document.getElementById("resFrascos").innerText = `ENTREGAR: ${frascos} Frascos.`;
     
-    // TRANSICIÓN FINAL: Ocultar form para que el botón OK suba
+    // FLUJO: Ocultar form para que el botón OK suba
     document.getElementById("form-wrapper").classList.add("hidden");
     document.getElementById("app-footer").classList.add("hidden");
     document.getElementById("result-card").classList.remove("hidden");
