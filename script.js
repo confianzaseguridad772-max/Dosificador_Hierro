@@ -2,6 +2,7 @@ const IMGS_PATH = "img/";
 const USER_TOKEN = "77e68224"; 
 const KEY_NAME = "puntosGustavo2026"; 
 const API_BASE = `https://api.keyvalue.xyz/${USER_TOKEN}/${KEY_NAME}`;
+const API_USERS = `https://api.keyvalue.xyz/${USER_TOKEN}/usuariosSistema`;
 
 const paisajesPeru = [
     "https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=1600",
@@ -13,6 +14,82 @@ window.onload = () => {
     obtenerPuntosGlobales();
     cambiarFondo();
 };
+
+// --- NUEVAS FUNCIONES DE SEGURIDAD ---
+
+async function intentarLogin() {
+    const u = document.getElementById("user-input").value;
+    const p = document.getElementById("pass-input").value;
+
+    // Acceso Maestro para Gustavo
+    if(u === "Gustavo" && p === "Admin2026") {
+        document.getElementById("login-screen").classList.add("hidden");
+        document.getElementById("app-container").classList.remove("hidden");
+        return;
+    }
+
+    try {
+        const res = await fetch(API_USERS);
+        const db = JSON.parse(await res.text());
+        const usuarioValido = db.find(item => item.u === u && item.p === p);
+        
+        if(usuarioValido) {
+            document.getElementById("login-screen").classList.add("hidden");
+            document.getElementById("app-container").classList.remove("hidden");
+        } else {
+            alert("Usuario o clave incorrectos. Solicita tu acceso al WhatsApp 956113989.");
+        }
+    } catch(e) {
+        alert("Error de conexión. Intenta nuevamente.");
+    }
+}
+
+function abrirAdmin() {
+    const p = prompt("Ingresa la clave maestra de Administrador:");
+    if(p === "Admin2026") {
+        document.getElementById("app-container").classList.add("hidden");
+        document.getElementById("admin-panel").classList.remove("hidden");
+        listarUsuarios();
+    }
+}
+
+function cerrarAdmin() {
+    document.getElementById("admin-panel").classList.add("hidden");
+    document.getElementById("app-container").classList.remove("hidden");
+}
+
+async function crearNuevoUsuario() {
+    const u = document.getElementById("new-u").value;
+    const p = document.getElementById("new-p").value;
+    const e = document.getElementById("new-e").value;
+    if(!u || !p) { alert("Llena al menos usuario y clave"); return; }
+
+    try {
+        const res = await fetch(API_USERS);
+        let db = [];
+        if(res.ok) db = JSON.parse(await res.text() || "[]");
+        db.push({u, p, e});
+        await fetch(`${API_USERS}/${JSON.stringify(db)}`, {method:'POST'});
+        alert("¡Éxito! Usuario " + u + " registrado. Ya puede ingresar.");
+        document.getElementById("new-u").value = "";
+        document.getElementById("new-p").value = "";
+        listarUsuarios();
+    } catch(err) { alert("Error al guardar en la nube."); }
+}
+
+async function listarUsuarios() {
+    try {
+        const res = await fetch(API_USERS);
+        const db = JSON.parse(await res.text() || "[]");
+        const container = document.getElementById("lista-usuarios");
+        container.innerHTML = "<h3>Usuarios con Acceso:</h3>";
+        db.forEach(user => {
+            container.innerHTML += `<div class="user-item">👤 ${user.u} | 🔑 ${user.p} <br><small>${user.e || 'Sin correo'}</small></div>`;
+        });
+    } catch(e) { console.log("Nada que mostrar todavía."); }
+}
+
+// --- TUS FUNCIONES ORIGINALES (SIN CAMBIOS) ---
 
 async function obtenerPuntosGlobales() {
     try {
@@ -53,7 +130,6 @@ function validar() {
     const pesoInput = document.getElementById("peso");
     let peso = parseFloat(pesoInput.value);
     
-    // Autocorrección de peso (9200 -> 9.2)
     if (peso > 100) { 
         peso = peso / 1000; 
         pesoInput.value = peso.toFixed(1); 
