@@ -11,7 +11,51 @@
     <div id="bg-peru" class="cyber-bg"></div>
     <div class="overlay"></div>
 
-    <div class="main-card">
+    <div id="login-screen" class="main-card">
+        <header class="cyber-header">
+            <div class="logo-area">
+                <h1>ACCESO<span>RESTRINGIDO</span></h1>
+                <p>SISTEMA PROFESIONAL 2026</p>
+            </div>
+        </header>
+        <div class="app-content">
+            <div class="field">
+                <label>USUARIO</label>
+                <input type="text" id="user-input" placeholder="Tu usuario">
+            </div>
+            <div class="field">
+                <label>CONTRASEÑA</label>
+                <input type="password" id="pass-input" placeholder="••••••••">
+            </div>
+            <button class="btn-cyber btn-calc" onclick="intentarLogin()">ENTRAR AL SISTEMA</button>
+            <div class="pay-notice">
+                <p>¿No tienes acceso? (S/ 5.00 via Yape)</p>
+                <a href="https://wa.me/51956113989?text=Hola%20Gustavo,%20deseo%20acceso%20al%20sistema%20Dosis%20Hierro.%20Adjunto%20pantallazo%20de%20Yape." target="_blank" class="btn-wa">📲 WhatsApp: 956113989</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="admin-panel" class="main-card hidden">
+        <header class="cyber-header">
+            <div class="logo-area"><h1>PANEL<span>ADMIN</span></h1></div>
+            <button onclick="cerrarAdmin()" style="background:none; border:none; color:white; cursor:pointer; font-size:1.2rem;">✖</button>
+        </header>
+        <div class="app-content">
+            <div class="field">
+                <label>REGISTRAR NUEVO CLIENTE</label>
+                <div class="input-grid">
+                    <input type="text" id="new-u" placeholder="Usuario">
+                    <input type="text" id="new-p" placeholder="Password">
+                </div>
+                <input type="text" id="new-e" placeholder="Correo electrónico" style="margin-top:10px">
+                <button class="btn-cyber btn-calc" style="margin-top:15px" onclick="crearNuevoUsuario()">+ DAR ACCESO</button>
+            </div>
+            <div id="lista-usuarios" class="user-list">
+                </div>
+        </div>
+    </div>
+
+    <div id="app-container" class="main-card hidden">
         <header class="cyber-header">
             <div class="logo-area">
                 <div class="neon-circle">⚕️</div>
@@ -21,6 +65,7 @@
                 </div>
             </div>
             <div class="version-box">Puntos: <span id="numConsultas">0</span></div>
+            <button onclick="abrirAdmin()" style="opacity:0.2; background:none; border:none; color:white; margin-left:10px;">⚙</button>
         </header>
 
         <section class="app-content">
