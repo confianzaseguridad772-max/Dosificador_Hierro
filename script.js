@@ -1,5 +1,5 @@
 const IMGS_PATH = "img/"; 
-const USER_TOKEN = "77e68224"; // ID único para tu base de datos
+const USER_TOKEN = "77e68224"; 
 const KEY_NAME = "puntosGustavo2026"; 
 const API_BASE = `https://api.keyvalue.xyz/${USER_TOKEN}/${KEY_NAME}`;
 
@@ -28,7 +28,8 @@ async function obtenerPuntosGlobales() {
 
 function cambiarFondo() {
     const bg = paisajesPeru[Math.floor(Math.random() * paisajesPeru.length)];
-    document.getElementById("bg-peru").style.background = `url('${bg}')`;
+    const bgElement = document.getElementById("bg-peru");
+    if(bgElement) bgElement.style.background = `url('${bg}')`;
 }
 
 function seleccionarOpcion(idHidden, elemento) {
@@ -52,10 +53,11 @@ function validar() {
     const pesoInput = document.getElementById("peso");
     let peso = parseFloat(pesoInput.value);
     
+    // Autocorrección de peso (9200 -> 9.2)
     if (peso > 100) { 
         peso = peso / 1000; 
         pesoInput.value = peso.toFixed(1); 
-        pesoInput.style.borderColor = "var(--neon-cyan)";
+        pesoInput.style.borderColor = "#00f2fe";
         setTimeout(() => { pesoInput.style.borderColor = "rgba(255,255,255,0.2)"; }, 500);
     }
 
@@ -67,10 +69,10 @@ function validar() {
 
     if (peso > 0 && tipo) {
         if (tipo.includes("_g") && peso > 12) {
-            msg.innerText = "Peso alto para gotas. Sugerido: Jarabe.";
+            msg.innerText = "Peso alto para gotas (>12kg). Se sugiere Jarabe.";
             alerta.classList.remove("hidden");
         } else if (tipo.includes("_j") && peso < 8) {
-            msg.innerText = "Peso bajo para jarabe. Sugerido: Gotas.";
+            msg.innerText = "Peso bajo para jarabe (<8kg). Se sugiere Gotas.";
             alerta.classList.remove("hidden");
         } else {
             alerta.classList.add("hidden");
