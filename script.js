@@ -22,10 +22,8 @@ function actualizarImagen() {
     const tipo = document.getElementById("tipoHierro").value;
     const img = document.getElementById("imgHierro");
     if(tipo) {
-        // CORRECCIÓN FINAL: Ruta relativa img/nombre.jpg
+        // CORRECCIÓN: Ruta relativa img/nombre.jpg
         img.src = IMGS_PATH + tipo + ".jpg";
-        
-        // Verificación en consola para ayudarte
         console.log("Intentando cargar:", img.src);
     }
 }
@@ -66,6 +64,9 @@ function validar() {
 
 function manejarFlujo() {
     const btn = document.getElementById("actionBtn");
+    const formWrapper = document.getElementById("form-wrapper");
+    const resultCard = document.getElementById("result-card");
+
     if (btn.classList.contains("btn-calc")) {
         const peso = parseFloat(document.getElementById("peso").value);
         const tipo = document.getElementById("tipoHierro").value;
@@ -93,14 +94,23 @@ function manejarFlujo() {
                 frascos = 30 * meses; break;
         }
 
+        // Insertar resultados
         document.getElementById("resDosis").innerText = dosis;
-        document.getElementById("resFrascos").innerText = `ENTREGAR: ${frascos}   Frascos.`;
+        document.getElementById("resFrascos").innerText = `ENTREGAR: ${frascos} Frascos.`;
         
-        document.getElementById("form-wrapper").classList.add("form-blur");
-        document.getElementById("result-card").classList.remove("hidden");
+        // --- MEJORA DE VISIBILIDAD ---
+        // Ocultamos el formulario completamente para que el botón suba
+        formWrapper.style.display = "none"; 
+        
+        // Mostramos la tarjeta de resultados (Imagen y texto)
+        resultCard.classList.remove("hidden");
+        
+        // Cambiamos el botón a modo Registro (OK)
         btn.className = "btn-cyber btn-reg";
         btn.innerText = "OK";
+        
     } else {
+        // Lógica para guardar puntos y reiniciar
         totalPuntos += 7;
         localStorage.setItem("puntosClinicos", totalPuntos);
         location.reload(); 
