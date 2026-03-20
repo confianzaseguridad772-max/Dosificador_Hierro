@@ -2,7 +2,10 @@ const IMGS_PATH = "img/";
 const USER_TOKEN = "77e68224"; 
 const KEY_NAME = "puntosGustavo2026"; 
 const API_BASE = `https://api.keyvalue.xyz/${USER_TOKEN}/${KEY_NAME}`;
-const API_USERS = `https://api.keyvalue.xyz/${USER_TOKEN}/usuariosSistema`;
+
+// --- CONEXIÓN A GOOGLE SHEETS ---
+// Reemplaza esta URL con la que obtuviste de Extensiones > Apps Script > Implementar
+const API_USERS = "TU_URL_DE_APPS_SCRIPT_AQUI";
 
 const paisajesPeru = [
     "https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=1600",
@@ -15,7 +18,7 @@ window.onload = () => {
     cambiarFondo();
 };
 
-// --- NUEVAS FUNCIONES DE SEGURIDAD ---
+// --- NUEVAS FUNCIONES DE SEGURIDAD (CONECTADAS A EXCEL) ---
 
 async function intentarLogin() {
     const u = document.getElementById("user-input").value;
@@ -29,8 +32,9 @@ async function intentarLogin() {
     }
 
     try {
+        // Obtenemos los usuarios desde Google Sheets
         const res = await fetch(API_USERS);
-        const db = JSON.parse(await res.text());
+        const db = await res.json();
         const usuarioValido = db.find(item => item.u === u && item.p === p);
         
         if(usuarioValido) {
@@ -40,7 +44,7 @@ async function intentarLogin() {
             alert("Usuario o clave incorrectos. Solicita tu acceso al WhatsApp 956113989.");
         }
     } catch(e) {
-        alert("Error de conexión. Intenta nuevamente.");
+        alert("Error de conexión con la base de datos. Verifica la URL de Apps Script.");
     }
 }
 
@@ -65,28 +69,39 @@ async function crearNuevoUsuario() {
     if(!u || !p) { alert("Llena al menos usuario y clave"); return; }
 
     try {
-        const res = await fetch(API_USERS);
-        let db = [];
-        if(res.ok) db = JSON.parse(await res.text() || "[]");
-        db.push({u, p, e});
-        await fetch(`${API_USERS}/${JSON.stringify(db)}`, {method:'POST'});
-        alert("¡Éxito! Usuario " + u + " registrado. Ya puede ingresar.");
+        // Enviamos los datos al Google Sheets
+        const response = await fetch(API_USERS, {
+            method: 'POST',
+            mode: 'no-cors', // Necesario para Google Apps Script
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: "crear", u: u, p: p, e: e })
+        });
+
+        alert("¡Petición enviada! Verifica tu Google Sheets. El usuario " + u + " se está procesando.");
         document.getElementById("new-u").value = "";
         document.getElementById("new-p").value = "";
-        listarUsuarios();
-    } catch(err) { alert("Error al guardar en la nube."); }
+        document.getElementById("new-e").value = "";
+        
+        // Esperamos un momento para que Google actualice y refrescamos la lista
+        setTimeout(listarUsuarios, 2000);
+
+    } catch(err) { 
+        alert("Error al guardar en Google Sheets."); 
+    }
 }
 
 async function listarUsuarios() {
     try {
         const res = await fetch(API_USERS);
-        const db = JSON.parse(await res.text() || "[]");
+        const db = await res.json();
         const container = document.getElementById("lista-usuarios");
-        container.innerHTML = "<h3>Usuarios con Acceso:</h3>";
+        container.innerHTML = "<h3>Usuarios con Acceso (Excel):</h3>";
         db.forEach(user => {
-            container.innerHTML += `<div class="user-item">👤 ${user.u} | 🔑 ${user.p} <br><small>${user.e || 'Sin correo'}</small></div>`;
+            container.innerHTML += `<div class="user-item">👤 ${user.u} | 🔑 ${user.p}</div>`;
         });
-    } catch(e) { console.log("Nada que mostrar todavía."); }
+    } catch(e) { 
+        console.log("Error al listar desde Excel."); 
+    }
 }
 
 // --- TUS FUNCIONES ORIGINALES (SIN CAMBIOS) ---
