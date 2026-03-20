@@ -39,7 +39,18 @@ function seleccionarOpcion(idHidden, elemento) {
 }
 
 function validar() {
-    const peso = parseFloat(document.getElementById("peso").value);
+    const pesoInput = document.getElementById("peso");
+    let peso = parseFloat(pesoInput.value);
+    
+    // MEJORA: Corrección automática de peso (Si ingresan 9200 lo convierte a 9.2)
+    if (peso > 100) { 
+        peso = peso / 1000; 
+        pesoInput.value = peso.toFixed(1); 
+        // Efecto visual de aviso
+        pesoInput.style.borderColor = "var(--neon-cyan)";
+        setTimeout(() => { pesoInput.style.borderColor = "rgba(255,255,255,0.2)"; }, 500);
+    }
+
     const esquema = document.getElementById("esquema").value;
     const tipo = document.getElementById("tipoHierro").value;
     const btn = document.getElementById("actionBtn");
@@ -59,7 +70,8 @@ function validar() {
         }
     }
 
-    if (peso > 0 && esquema && tipo) {
+    // Habilitar botón solo si los datos son lógicos (Peso menor a 100kg para pediatría)
+    if (peso > 0 && peso < 100 && esquema && tipo) {
         btn.disabled = false;
         btn.className = "btn-cyber btn-calc";
     } else {
