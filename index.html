@@ -20,19 +20,46 @@
         </header>
         <div class="app-content">
             <div class="field">
-                <label>USUARIO</label>
-                <input type="text" id="user-input" placeholder="Ingresa tu usuario">
+                <label>DNI (USUARIO)</label>
+                <input type="number" id="user-input" placeholder="Ingresa tu DNI">
             </div>
             <div class="field">
                 <label>CONTRASEÑA</label>
                 <input type="password" id="pass-input" placeholder="••••••••">
             </div>
             <button class="btn-cyber btn-calc" onclick="intentarLogin()">ENTRAR</button>
+            
             <div class="pay-notice">
-                <p>Solicitar acceso</p>
-                <a href="https://wa.me/51956113989?text=Hola%20estimado:%20Solicito%20acceso%20al%20Sistema%20Dosificación%20Hierro%20PRO
-                    %20Adjunto%20Yape%20de%20S/5.0%20y%20Correo" target="_blank" class="btn-wa">📲 WhatsApp</a>
+                <p>¿No tienes cuenta?</p>
+                <button class="btn-cyber btn-reg" onclick="mostrarRegistro()" style="margin-bottom: 10px;">CREAR MI CUENTA</button>
+                <a href="https://wa.me/51956113989?text=Hola%20estimado:%20Solicito%20acceso%20al%20Sistema%20Dosificación%20Hierro%20PRO" target="_blank" class="btn-wa">📲 Soporte WhatsApp</a>
             </div>
+        </div>
+    </div>
+
+    <div id="register-screen" class="main-card hidden">
+        <header class="cyber-header">
+            <div class="logo-area">
+                <h1>REGISTRO<span>-NUEVO</span></h1>
+            </div>
+            <button onclick="mostrarLogin()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">✖</button>
+        </header>
+        <div class="app-content" style="overflow-y: auto; max-height: 500px; padding-bottom: 30px;">
+            <div class="field"><label>DNI</label><input type="number" id="reg-dni" placeholder="Ej: 70605040"></div>
+            <div class="field"><label>Nombres y Apellidos</label><input type="text" id="reg-nombre" placeholder="Nombre completo"></div>
+            <div class="field"><label>Profesión</label><input type="text" id="reg-profesion" placeholder="Enfermero, Médico, etc."></div>
+            <div class="field"><label>Celular</label><input type="tel" id="reg-cel" placeholder="999888777"></div>
+            
+            <div class="input-grid">
+                <div class="field"><label>Región</label><input type="text" id="reg-region" placeholder="Huánuco"></div>
+                <div class="field"><label>Provincia</label><input type="text" id="reg-prov" placeholder="Leoncio Prado"></div>
+            </div>
+            
+            <div class="field"><label>Distrito</label><input type="text" id="reg-dist" placeholder="Rupa Rupa"></div>
+            <div class="field"><label>EESS (Establecimiento de Salud)</label><input type="text" id="reg-eess" placeholder="C.S. Castillo Grande"></div>
+            <div class="field"><label>Contraseña del Sistema</label><input type="password" id="reg-pass" placeholder="Crea una clave"></div>
+            
+            <button class="btn-cyber btn-calc" style="margin-top:10px;" onclick="crearCuentaPropia()">FINALIZAR REGISTRO</button>
         </div>
     </div>
 
@@ -42,15 +69,6 @@
             <button onclick="cerrarAdmin()" style="background:none; border:none; color:white; font-size:1.5rem;">✖</button>
         </header>
         <div class="app-content">
-            <div class="field">
-                <label>REGISTRAR NUEVO</label>
-                <div class="input-grid">
-                    <input type="text" id="new-u" placeholder="Usuario">
-                    <input type="text" id="new-p" placeholder="Clave">
-                </div>
-                <input type="text" id="new-e" placeholder="Correo" style="margin-top:10px">
-                <button class="btn-cyber btn-calc" style="margin-top:10px" onclick="crearNuevoUsuario()">ACTIVAR</button>
-            </div>
             <div id="lista-usuarios" class="user-list">
                 </div>
         </div>
@@ -66,7 +84,7 @@
                 </div>
             </div>
             <div class="version-box">P: <span id="numConsultas">0</span></div>
-            <button onclick="abrirAdmin()" style="opacity:0.1; background:none; border:none; color:white; cursor:default;">⚙</button>
+            <button onclick="abrirAdmin()" style="opacity:0.05; background:none; border:none; color:white; cursor:default;">⚙</button>
         </header>
 
         <section class="app-content">
@@ -119,7 +137,7 @@
                     <h2 id="resDosis">---</h2>
                     <p id="resFrascos">ENTREGAR: 0 Unidades.</p>
                 </div>
-                <button id="okBtn" class="btn-cyber btn-reg hidden" onclick="registrarYReiniciar()">OK</button>
+                <button id="okBtn" class="btn-cyber btn-reg hidden" onclick="registrarYReiniciar()">OK / NUEVO</button>
             </div>
         </section>
 
