@@ -4,7 +4,7 @@ const USER_TOKEN = "77e68224";
 const KEY_NAME = "puntosGustavo2026"; 
 const API_BASE = `https://api.keyvalue.xyz/${USER_TOKEN}/${KEY_NAME}`;
 
-// --- IMPORTANTE: Reemplaza con tu URL de la "Nueva implementación" ---
+// --- URL DE TU IMPLEMENTACIÓN DE GOOGLE APPS SCRIPT ---
 const API_USERS = "https://script.google.com/macros/s/AKfycbxsZsab_GYsvSzwuVhMD89WmxaH35mnlHsaXP1cH3FgriUzklPQOA4rkk7Lu10642dMRA/exec"; 
 
 const paisajesPeru = [
@@ -41,6 +41,7 @@ async function intentarLogin() {
 
     if (!dni || !pass) { alert("DNI y Contraseña requeridos"); return; }
 
+    // Acceso Maestro
     if (dni === "Omg20" && pass === "Sdmin2026*") { entrarApp(); return; }
 
     try {
@@ -154,7 +155,7 @@ function validar() {
     const pesoInput = document.getElementById("peso");
     let peso = parseFloat(pesoInput.value);
     
-    // Auto-corrección de gramos a kilos
+    // Auto-corrección de gramos a kilos (ej. 8500 -> 8.5)
     if (peso > 100) { 
         peso = peso / 1000; 
         pesoInput.value = peso.toFixed(1); 
@@ -164,12 +165,12 @@ function validar() {
     const tipo = document.getElementById("tipoHierro").value;
     const btn = document.getElementById("actionBtn");
 
-    // --- ALERTAS DE SEGURIDAD CLÍNICA ---
+    // --- ALERTAS DE SEGURIDAD CLÍNICA REINTEGRADAS ---
     if (peso > 0 && tipo) {
-        if (tipo.includes("_g") && peso > 12) {
-            alert("⚠️ Alerta: El peso es elevado para gotas (>12kg). Evalúe usar Jarabe.");
+        if (tipo.includes("_g") && peso >= 12) {
+            alert("⚠️ ALERTA: El peso es de " + peso + " kg. Se sugiere usar JARABE para mayor precisión en la dosis.");
         } else if (tipo.includes("_j") && peso < 8) {
-            alert("⚠️ Alerta: El peso es bajo para jarabe (<8kg). Evalúe usar Gotas.");
+            alert("⚠️ ALERTA: El peso es de " + peso + " kg. Se sugiere usar GOTAS por el volumen pequeño de la dosis.");
         }
     }
 
