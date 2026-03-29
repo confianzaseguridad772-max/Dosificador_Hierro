@@ -4,7 +4,7 @@ const KEY_NAME = "puntosGustavo2026";
 const API_BASE = `https://api.keyvalue.xyz/${USER_TOKEN}/${KEY_NAME}`;
 
 // --- CONFIGURACIÓN DE APPS SCRIPT ---
-const API_USERS = "https://script.google.com/macros/s/AKfycbyevNF0dg4V_3PjldD97IbOfaB57_FY2Wn1dX-7bwKWUMXgO6FTDClge-0-3yPJcO_TPw/exec";
+const API_USERS = "https://script.google.com/macros/s/AKfycbwYs-CopaYE9qvWI_K3q5aY-vlfRx8L--u2jnom1O64YRWW4LMgrOiVNEkmcbVMiQLMjA/exec";
 
 const paisajesPeru = [
     "https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=1600",
