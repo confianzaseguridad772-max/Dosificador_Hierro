@@ -34,7 +34,7 @@
 
         <div class="app-content">
 
-            <div class="field"><label>DNI / USUARIO</label><input type="number" id="user-input" placeholder="Ingresa DNI"></div>
+            <div class="field"><label>DNI</label><input type="number" id="user-input" placeholder="Ingresa DNI"></div>
 
             <div class="field"><label>CONTRASEÑA</label><input type="password" id="pass-input" placeholder="••••"></div>
 
@@ -44,7 +44,7 @@
 
                 <button class="btn-cyber btn-reg" onclick="mostrarRegistro()" style="margin-bottom:10px">REGISTRARSE</button>
 
-                <a href="https://wa.me/51956113989" target="_blank" class="btn-wa">📲 Soporte WhatsApp</a>
+                <a href="https://wa.me/51956113989" target="_blank" class="btn-wa">📲 Soporte</a>
 
             </div>
 
@@ -76,7 +76,7 @@
 
             <div class="input-grid">
 
-                <div class="field"><label>REGIÓN</label><input type="text" id="reg-region"></div>
+                <div class="field"><label>REGIÓN-DEPARTAMENTO</label><input type="text" id="reg-region"></div>
 
                 <div class="field"><label>PROVINCIA</label><input type="text" id="reg-prov"></div>
 
@@ -88,7 +88,7 @@
 
             <div class="field"><label>CONTRASEÑA</label><input type="password" id="reg-pass"></div>
 
-            <button class="btn-cyber btn-calc" onclick="crearCuentaPropia()">FINALIZAR REGISTRO</button>
+            <button class="btn-cyber btn-calc" onclick="crearCuentaPropia()">FINALIZAR</button>
 
         </div>
 
@@ -100,7 +100,7 @@
 
         <header class="cyber-header">
 
-            <div class="logo-area"><h1>DOSIS<span>HIERRO</span></h1><p>2Mg Gustabo Ortiz</p></div>
+            <div class="logo-area"><h1>DOSIS<span>HIERRO</span></h1><p>Mg Gustabo Ortiz</p></div>
 
             <div class="version-box">P: <span id="numConsultas">0</span></div>
 
@@ -118,7 +118,7 @@
 
                     <div class="field"><label>PESO (KG)</label><input type="number" id="peso" placeholder="0.0" oninput="validar()"></div>
 
-                    <div class="field"><label>N° MESES</label><input type="number" id="meses" value="1"></div>
+                    <div class="field"><label>CANTIDAD DE MESES INDICADO</label><input type="number" id="meses" value="1"></div>
 
                 </div>
 
@@ -130,4 +130,4 @@
 
                     <div class="cyber-options">
 
-                        <button class="option-btn" data-value="2" onclick="seleccionarOpcion('esquema', this)">🛡️ PREV</button>
+                        <button class="option-btn" data-value="2" onclick="seleccionarOpcion('esquema', this)">🛡️ PREVENTIVO</button>
