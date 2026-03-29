@@ -3,8 +3,8 @@ const USER_TOKEN = "77e68224";
 const KEY_NAME = "puntosGustavo2026"; 
 const API_BASE = `https://api.keyvalue.xyz/${USER_TOKEN}/${KEY_NAME}`;
 
-// --- CONFIGURACIÓN DE APPS SCRIPT ---
-const API_USERS = "https://script.google.com/macros/s/AKfycbwYs-CopaYE9qvWI_K3q5aY-vlfRx8L--u2jnom1O64YRWW4LMgrOiVNEkmcbVMiQLMjA/exec";
+// --- IMPORTANTE: PEGA AQUÍ TU NUEVA URL DE GOOGLE APPS SCRIPT ---
+const API_USERS = "https://script.google.com/macros/s/AKfycbyq8Uz_fSHtTicpMBa77suuz-EhrewprwNO91QyxjYGwmpqcLOpiYlY-UaTbZ2xXyrVKA/exec"; 
 
 const paisajesPeru = [
     "https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=1600",
@@ -17,8 +17,7 @@ window.onload = () => {
     cambiarFondo();
 };
 
-// --- NAVEGACIÓN ENTRE PANTALLAS ---
-
+// --- NAVEGACIÓN ---
 function mostrarRegistro() {
     document.getElementById("login-screen").classList.add("hidden");
     document.getElementById("register-screen").classList.remove("hidden");
@@ -34,92 +33,64 @@ function entrarApp() {
     document.getElementById("app-container").classList.remove("hidden");
 }
 
-// --- LÓGICA DE USUARIOS Y SEGURIDAD ---
-
+// --- LOGIN Y SEGURIDAD ---
 async function intentarLogin() {
     const dni = document.getElementById("user-input").value.trim();
     const pass = document.getElementById("pass-input").value.trim();
 
-    if (!dni || !pass) { alert("Ingresa tu DNI y contraseña"); return; }
+    if (!dni || !pass) { alert("DNI y Contraseña requeridos"); return; }
 
-    // Acceso Maestro
-    if (dni === "Omg20" && pass === "Sdmin2026*") {
-        entrarApp();
-        return;
-    }
+    // Acceso Administrador (Tuyo)
+    if (dni === "Omg20" && pass === "Sdmin2026*") { entrarApp(); return; }
 
     try {
         const res = await fetch(API_USERS);
         const db = await res.json();
+        const user = db.find(u => u.dni == dni && u.p == pass);
         
-        // Buscamos coincidencia de DNI y Password
-        const usuarioValido = db.find(item => item.dni == dni && item.p == pass);
-        
-        if (usuarioValido) {
-            entrarApp();
-        } else {
-            alert("DNI o contraseña incorrectos. Si no tienes cuenta, regístrate.");
-        }
-    } catch (e) {
-        alert("Error de conexión con la base de datos.");
-    }
+        if (user) entrarApp();
+        else alert("DNI o contraseña incorrectos.");
+    } catch (e) { alert("Error al conectar con la base de datos."); }
 }
 
 async function crearCuentaPropia() {
-    const dni = document.getElementById("reg-dni").value.trim();
-    const nombre = document.getElementById("reg-nombre").value.trim();
-    const prof = document.getElementById("reg-profesion").value.trim();
-    const cel = document.getElementById("reg-cel").value.trim();
-    const reg = document.getElementById("reg-region").value.trim();
-    const prov = document.getElementById("reg-prov").value.trim();
-    const dist = document.getElementById("reg-dist").value.trim();
-    const eess = document.getElementById("reg-eess").value.trim();
-    const pass = document.getElementById("reg-pass").value.trim();
+    const datos = {
+        action: "crear",
+        dni: document.getElementById("reg-dni").value.trim(),
+        nombre: document.getElementById("reg-nombre").value.trim(),
+        prof: document.getElementById("reg-profesion").value.trim(),
+        cel: document.getElementById("reg-cel").value.trim(),
+        reg: document.getElementById("reg-region").value.trim(),
+        prov: document.getElementById("reg-prov").value.trim(),
+        dist: document.getElementById("reg-dist").value.trim(),
+        eess: document.getElementById("reg-eess").value.trim(),
+        p: document.getElementById("reg-pass").value.trim()
+    };
 
-    if (!dni || !pass || !nombre) { 
-        alert("DNI, Nombre y Contraseña son campos obligatorios."); 
+    if (!datos.dni || !datos.p || !datos.nombre) { 
+        alert("Campos obligatorios: DNI, Nombre y Contraseña"); 
         return; 
     }
 
     const btn = document.querySelector("#register-screen .btn-calc");
-    btn.innerText = "PROCESANDO...";
+    btn.innerText = "REGISTRANDO...";
     btn.disabled = true;
-
-    const datos = {
-        action: "crear",
-        dni: dni,
-        nombre: nombre,
-        prof: prof,
-        cel: cel,
-        reg: reg,
-        prov: prov,
-        dist: dist,
-        eess: eess,
-        p: pass
-    };
 
     try {
         await fetch(API_USERS, {
             method: 'POST',
             mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datos)
         });
-
-        alert("¡Registro exitoso! Ya puedes iniciar sesión con tu DNI.");
+        alert("¡Registro exitoso! Ya puedes ingresar con tu DNI.");
         mostrarLogin();
-    } catch (err) {
-        alert("Hubo un problema al enviar el registro.");
-    } finally {
-        btn.innerText = "FINALIZAR REGISTRO";
-        btn.disabled = false;
-    }
+    } catch (err) { alert("Error en el registro."); }
+    finally { btn.innerText = "FINALIZAR REGISTRO"; btn.disabled = false; }
 }
 
-// --- FUNCIONES DE ADMINISTRADOR ---
-
+// --- PANEL ADMIN ---
 function abrirAdmin() {
-    const p = prompt("Clave de Administrador:");
+    const p = prompt("Acceso Maestro:");
     if (p === "Sdmin2026*") {
         document.getElementById("app-container").classList.add("hidden");
         document.getElementById("admin-panel").classList.remove("hidden");
@@ -137,82 +108,49 @@ async function listarUsuarios() {
         const res = await fetch(API_USERS);
         const db = await res.json();
         const container = document.getElementById("lista-usuarios");
-        container.innerHTML = "<h3>Usuarios Registrados (Excel):</h3>";
-        db.forEach(user => {
-            container.innerHTML += `<div class="user-item">👤 DNI: ${user.dni} | 🔑 ${user.p}</div>`;
+        container.innerHTML = "<h3>Usuarios Activos (Excel):</h3>";
+        db.forEach(u => { 
+            container.innerHTML += `<div class="user-item">👤 DNI: ${u.dni} | 🔑: ${u.p}</div>`; 
         });
-    } catch (e) {
-        console.log("Error al listar desde Excel.");
-    }
+    } catch (e) { console.log("Error cargando lista."); }
 }
 
-// --- CALCULADORA Y FUNCIONES ORIGINALES ---
-
+// --- CALCULADORA ---
 async function obtenerPuntosGlobales() {
     try {
         const res = await fetch(API_BASE);
-        if (!res.ok) throw new Error();
         const valor = await res.text();
         document.getElementById("numConsultas").innerText = valor || 0;
-    } catch (err) {
-        let local = localStorage.getItem("puntosClinicos") || 0;
-        document.getElementById("numConsultas").innerText = local;
-    }
+    } catch (err) { document.getElementById("numConsultas").innerText = localStorage.getItem("puntosClinicos") || 0; }
 }
 
 function cambiarFondo() {
     const bg = paisajesPeru[Math.floor(Math.random() * paisajesPeru.length)];
-    const bgElement = document.getElementById("bg-peru");
-    if (bgElement) bgElement.style.background = `url('${bg}')`;
+    document.getElementById("bg-peru").style.background = `url('${bg}')`;
 }
 
 function seleccionarOpcion(idHidden, elemento) {
-    const botones = elemento.parentElement.querySelectorAll('.option-btn');
-    botones.forEach(btn => btn.classList.remove('selected'));
+    elemento.parentElement.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
     elemento.classList.add('selected');
-    
-    const valor = elemento.getAttribute('data-value');
-    document.getElementById(idHidden).value = valor;
-
+    document.getElementById(idHidden).value = elemento.getAttribute('data-value');
     if (idHidden === 'tipoHierro') {
-        const img = document.getElementById("imgHierro");
-        img.src = IMGS_PATH + valor + ".jpg";
+        document.getElementById("imgHierro").src = IMGS_PATH + document.getElementById(idHidden).value + ".jpg";
         document.getElementById("result-card").classList.remove("hidden");
-        document.getElementById("okBtn").classList.add("hidden"); 
+        document.getElementById("okBtn").classList.add("hidden");
     }
     validar();
 }
 
 function validar() {
     const pesoInput = document.getElementById("peso");
-    let peso = parseFloat(pesoInput.value);
-    
-    if (peso > 100) { 
-        peso = peso / 1000; 
-        pesoInput.value = peso.toFixed(1); 
-        pesoInput.style.borderColor = "#00f2fe";
-        setTimeout(() => { pesoInput.style.borderColor = "rgba(255,255,255,0.2)"; }, 500);
-    }
+    let val = parseFloat(pesoInput.value);
+    if (val > 100) { pesoInput.value = (val/1000).toFixed(1); }
 
-    const esquema = document.getElementById("esquema").value;
-    const tipo = document.getElementById("tipoHierro").value;
+    const esc = document.getElementById("esquema").value;
+    const tip = document.getElementById("tipoHierro").value;
     const btn = document.getElementById("actionBtn");
-    const alerta = document.getElementById("alerta-clinica");
-    const msg = document.getElementById("msg-alerta");
 
-    if (peso > 0 && tipo) {
-        if (tipo.includes("_g") && peso > 12) {
-            msg.innerText = "Peso alto para gotas (>12kg). Se sugiere Jarabe.";
-            alerta.classList.remove("hidden");
-        } else if (tipo.includes("_j") && peso < 8) {
-            msg.innerText = "Peso bajo para jarabe (<8kg). Se sugiere Gotas.";
-            alerta.classList.remove("hidden");
-        } else {
-            alerta.classList.add("hidden");
-        }
-    }
-
-    if (peso > 0 && peso < 100 && esquema && tipo) {
+    if (parseFloat(pesoInput.value) > 0 && esc && tip) {
         btn.disabled = false;
         btn.className = "btn-cyber btn-calc";
     } else {
@@ -249,8 +187,7 @@ function calcularDosis() {
     }
 
     document.getElementById("resDosis").innerText = dosis;
-    document.getElementById("resFrascos").innerText = `ENTREGAR: ${frascos} Unidades.`;
-    
+    document.getElementById("resFrascos").innerText = `ENTREGAR: ${frascos} Unid.`;
     document.getElementById("form-wrapper").classList.add("hidden");
     document.getElementById("app-footer").classList.add("hidden");
     document.getElementById("result-card").classList.remove("hidden");
@@ -260,17 +197,9 @@ function calcularDosis() {
 async function registrarYReiniciar() {
     try {
         const res = await fetch(API_BASE);
-        let actual = 0;
-        if (res.ok) {
-            const texto = await res.text();
-            actual = parseInt(texto) || 0;
-        }
-        let nuevoTotal = actual + 1;
-        await fetch(`${API_BASE}/${nuevoTotal}`, { method: 'POST' });
-        localStorage.setItem("puntosClinicos", nuevoTotal);
-    } catch (err) {
-        let local = parseInt(localStorage.getItem("puntosClinicos")) || 0;
-        localStorage.setItem("puntosClinicos", local + 1);
-    }
+        const act = parseInt(await res.text()) || 0;
+        await fetch(`${API_BASE}/${act + 1}`, { method: 'POST' });
+        localStorage.setItem("puntosClinicos", act + 1);
+    } catch (e) { console.log("Error puntos."); }
     location.reload(); 
 }
