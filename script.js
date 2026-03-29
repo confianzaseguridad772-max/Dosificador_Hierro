@@ -1,10 +1,11 @@
+// --- CONFIGURACIÓN GLOBAL ---
 const IMGS_PATH = "img/"; 
 const USER_TOKEN = "77e68224"; 
 const KEY_NAME = "puntosGustavo2026"; 
 const API_BASE = `https://api.keyvalue.xyz/${USER_TOKEN}/${KEY_NAME}`;
 
-// --- IMPORTANTE: PEGA AQUÍ TU NUEVA URL DE GOOGLE APPS SCRIPT ---
-const API_USERS = "https://script.google.com/macros/s/AKfycbyq8Uz_fSHtTicpMBa77suuz-EhrewprwNO91QyxjYGwmpqcLOpiYlY-UaTbZ2xXyrVKA/exec"; 
+// --- PEGA AQUÍ TU URL DE GOOGLE APPS SCRIPT ---
+const API_USERS = "https://script.google.com/macros/s/AKfycbxIfc35JvhVEXNVU2tVzC7Gj9pA4esY9Oyd77IYG7-ZsxOD-8LkG-9OphfL0P7enTSd2Q/exec"; 
 
 const paisajesPeru = [
     "https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=1600",
@@ -17,7 +18,7 @@ window.onload = () => {
     cambiarFondo();
 };
 
-// --- NAVEGACIÓN ---
+// --- NAVEGACIÓN DE INTERFAZ ---
 function mostrarRegistro() {
     document.getElementById("login-screen").classList.add("hidden");
     document.getElementById("register-screen").classList.remove("hidden");
@@ -33,14 +34,14 @@ function entrarApp() {
     document.getElementById("app-container").classList.remove("hidden");
 }
 
-// --- LOGIN Y SEGURIDAD ---
+// --- SEGURIDAD Y ACCESO ---
 async function intentarLogin() {
     const dni = document.getElementById("user-input").value.trim();
     const pass = document.getElementById("pass-input").value.trim();
 
     if (!dni || !pass) { alert("DNI y Contraseña requeridos"); return; }
 
-    // Acceso Administrador (Tuyo)
+    // Acceso Maestro Administrador
     if (dni === "Omg20" && pass === "Sdmin2026*") { entrarApp(); return; }
 
     try {
@@ -50,10 +51,11 @@ async function intentarLogin() {
         
         if (user) entrarApp();
         else alert("DNI o contraseña incorrectos.");
-    } catch (e) { alert("Error al conectar con la base de datos."); }
+    } catch (e) { alert("Error al validar con la base de datos."); }
 }
 
 async function crearCuentaPropia() {
+    // Captura manual de cada campo para asegurar el envío completo
     const datos = {
         action: "crear",
         dni: document.getElementById("reg-dni").value.trim(),
@@ -67,30 +69,40 @@ async function crearCuentaPropia() {
         p: document.getElementById("reg-pass").value.trim()
     };
 
+    // Validación de campos obligatorios
     if (!datos.dni || !datos.p || !datos.nombre) { 
         alert("Campos obligatorios: DNI, Nombre y Contraseña"); 
         return; 
     }
 
     const btn = document.querySelector("#register-screen .btn-calc");
-    btn.innerText = "REGISTRANDO...";
+    const originalText = btn.innerText;
+    btn.innerText = "PROCESANDO...";
     btn.disabled = true;
 
     try {
         await fetch(API_USERS, {
             method: 'POST',
-            mode: 'no-cors',
+            mode: 'no-cors', // Necesario para Google Apps Script
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datos)
         });
+
         alert("¡Registro exitoso! Ya puedes ingresar con tu DNI.");
         mostrarLogin();
-    } catch (err) { alert("Error en el registro."); }
-    finally { btn.innerText = "FINALIZAR REGISTRO"; btn.disabled = false; }
+        // Limpiar formulario
+        document.querySelectorAll("#register-screen input").forEach(input => input.value = "");
+    } catch (err) { 
+        alert("Hubo un error al enviar los datos."); 
+    } finally { 
+        btn.innerText = originalText; 
+        btn.disabled = false; 
+    }
 }
 
-// --- PANEL ADMIN ---
+// --- PANEL DE ADMINISTRACIÓN ---
 function abrirAdmin() {
-    const p = prompt("Acceso Maestro:");
+    const p = prompt("Clave de Administrador:");
     if (p === "Sdmin2026*") {
         document.getElementById("app-container").classList.add("hidden");
         document.getElementById("admin-panel").classList.remove("hidden");
@@ -108,20 +120,22 @@ async function listarUsuarios() {
         const res = await fetch(API_USERS);
         const db = await res.json();
         const container = document.getElementById("lista-usuarios");
-        container.innerHTML = "<h3>Usuarios Activos (Excel):</h3>";
+        container.innerHTML = "<h3>Usuarios Registrados:</h3>";
         db.forEach(u => { 
             container.innerHTML += `<div class="user-item">👤 DNI: ${u.dni} | 🔑: ${u.p}</div>`; 
         });
-    } catch (e) { console.log("Error cargando lista."); }
+    } catch (e) { console.error("Error cargando lista."); }
 }
 
-// --- CALCULADORA ---
+// --- CALCULADORA Y UTILIDADES ---
 async function obtenerPuntosGlobales() {
     try {
         const res = await fetch(API_BASE);
         const valor = await res.text();
         document.getElementById("numConsultas").innerText = valor || 0;
-    } catch (err) { document.getElementById("numConsultas").innerText = localStorage.getItem("puntosClinicos") || 0; }
+    } catch (err) { 
+        document.getElementById("numConsultas").innerText = localStorage.getItem("puntosClinicos") || 0; 
+    }
 }
 
 function cambiarFondo() {
@@ -133,6 +147,7 @@ function seleccionarOpcion(idHidden, elemento) {
     elemento.parentElement.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
     elemento.classList.add('selected');
     document.getElementById(idHidden).value = elemento.getAttribute('data-value');
+    
     if (idHidden === 'tipoHierro') {
         document.getElementById("imgHierro").src = IMGS_PATH + document.getElementById(idHidden).value + ".jpg";
         document.getElementById("result-card").classList.remove("hidden");
@@ -142,15 +157,17 @@ function seleccionarOpcion(idHidden, elemento) {
 }
 
 function validar() {
-    const pesoInput = document.getElementById("peso");
-    let val = parseFloat(pesoInput.value);
-    if (val > 100) { pesoInput.value = (val/1000).toFixed(1); }
+    const pInput = document.getElementById("peso");
+    let pVal = parseFloat(pInput.value);
+    
+    // Auto-corrección si ponen gramos (ej. 8500 -> 8.5)
+    if (pVal > 100) { pInput.value = (pVal/1000).toFixed(1); }
 
     const esc = document.getElementById("esquema").value;
     const tip = document.getElementById("tipoHierro").value;
     const btn = document.getElementById("actionBtn");
 
-    if (parseFloat(pesoInput.value) > 0 && esc && tip) {
+    if (parseFloat(pInput.value) > 0 && esc && tip) {
         btn.disabled = false;
         btn.className = "btn-cyber btn-calc";
     } else {
@@ -188,6 +205,7 @@ function calcularDosis() {
 
     document.getElementById("resDosis").innerText = dosis;
     document.getElementById("resFrascos").innerText = `ENTREGAR: ${frascos} Unid.`;
+    
     document.getElementById("form-wrapper").classList.add("hidden");
     document.getElementById("app-footer").classList.add("hidden");
     document.getElementById("result-card").classList.remove("hidden");
@@ -200,6 +218,6 @@ async function registrarYReiniciar() {
         const act = parseInt(await res.text()) || 0;
         await fetch(`${API_BASE}/${act + 1}`, { method: 'POST' });
         localStorage.setItem("puntosClinicos", act + 1);
-    } catch (e) { console.log("Error puntos."); }
+    } catch (e) { console.log("Error al actualizar contador."); }
     location.reload(); 
 }
