@@ -16,19 +16,19 @@
             <div class="logo-area"><h1>DOSIFICADOR<span>-HIERRO INFANTIL</span></h1><p>Mg. Gustabo Ortiz</p></div>
         </header>
         <div class="app-content">
-            <div class="field"><label>DNI / USUARIO</label><input type="number" id="user-input" placeholder="Ingresa DNI"></div>
+            <div class="field"><label>DNI</label><input type="number" id="user-input" placeholder="Ingresa DNI"></div>
             <div class="field"><label>CONTRASEÑA</label><input type="password" id="pass-input" placeholder="••••"></div>
             <button class="btn-cyber btn-calc" onclick="intentarLogin()">ENTRAR</button>
             <div class="pay-notice">
-                <button class="btn-cyber btn-reg" onclick="mostrarRegistro()" style="margin-bottom:10px">REGISTRARSE</button>
-                <a href="https://wa.me/51956113989" target="_blank" class="btn-wa">📲 Soporte WhatsApp</a>
+                <button class="btn-cyber btn-reg" onclick="mostrarRegistro()" style="margin-bottom:10px">CREAR USUARIO</button>
+                <a href="https://wa.me/51956113989" target="_blank" class="btn-wa">📲 CONSULTAS</a>
             </div>
         </div>
     </div>
 
     <div id="register-screen" class="main-card hidden">
         <header class="cyber-header">
-            <div class="logo-area"><h1>REGISTRO<span>-SALUD</span></h1></div>
+            <div class="logo-area"><h1>REGIS<span>TRAME</span></h1></div>
             <button onclick="mostrarLogin()" style="color:white; background:none; border:none; cursor:pointer;">✖</button>
         </header>
         <div class="app-content" style="overflow-y:auto; max-height:450px;">
@@ -37,13 +37,13 @@
             <div class="field"><label>PROFESIÓN</label><input type="text" id="reg-profesion"></div>
             <div class="field"><label>CELULAR</label><input type="tel" id="reg-cel"></div>
             <div class="input-grid">
-                <div class="field"><label>REGIÓN</label><input type="text" id="reg-region"></div>
+                <div class="field"><label>REGIÓN-DEPARTAMENTO</label><input type="text" id="reg-region"></div>
                 <div class="field"><label>PROVINCIA</label><input type="text" id="reg-prov"></div>
             </div>
             <div class="field"><label>DISTRITO</label><input type="text" id="reg-dist"></div>
             <div class="field"><label>EESS (ESTABLECIMIENTO)</label><input type="text" id="reg-eess"></div>
             <div class="field"><label>CONTRASEÑA</label><input type="password" id="reg-pass"></div>
-            <button class="btn-cyber btn-calc" onclick="crearCuentaPropia()">FINALIZAR REGISTRO</button>
+            <button class="btn-cyber btn-calc" onclick="crearCuentaPropia()">FINALIZAR</button>
         </div>
     </div>
 
@@ -64,8 +64,8 @@
                 <div class="field">
                     <label>FINALIDAD</label>
                     <div class="cyber-options">
-                        <button class="option-btn" data-value="2" onclick="seleccionarOpcion('esquema', this)">🛡️ PREV</button>
-                        <button class="option-btn" data-value="3" onclick="seleccionarOpcion('esquema', this)">💊 TRAT</button>
+                        <button class="option-btn" data-value="2" onclick="seleccionarOpcion('esquema', this)">🛡️ PREVENTIVO</button>
+                        <button class="option-btn" data-value="3" onclick="seleccionarOpcion('esquema', this)">💊 TRATAMIENTO</button>
                     </div>
                     <input type="hidden" id="esquema">
                 </div>
@@ -73,10 +73,10 @@
                 <div class="field">
                     <label>PRESENTACIÓN</label>
                     <div class="cyber-options grid-options">
-                        <button class="option-btn" data-value="polimaltosado_g" onclick="seleccionarOpcion('tipoHierro', this)">Gotas Polim</button>
-                        <button class="option-btn" data-value="sulfato_g" onclick="seleccionarOpcion('tipoHierro', this)">Gotas Sulf</button>
-                        <button class="option-btn" data-value="sulfato_j" onclick="seleccionarOpcion('tipoHierro', this)">Jarabe Sulf</button>
-                        <button class="option-btn" data-value="polimaltosado_j" onclick="seleccionarOpcion('tipoHierro', this)">Jarabe Polim</button>
+                        <button class="option-btn" data-value="polimaltosado_g" onclick="seleccionarOpcion('tipoHierro', this)">Gotas Polimaltosa</button>
+                        <button class="option-btn" data-value="sulfato_g" onclick="seleccionarOpcion('tipoHierro', this)">Gotas Sulfato</button>
+                        <button class="option-btn" data-value="sulfato_j" onclick="seleccionarOpcion('tipoHierro', this)">Jarabe Sulfato</button>
+                        <button class="option-btn" data-value="polimaltosado_j" onclick="seleccionarOpcion('tipoHierro', this)">Jarabe Polimaltosa</button>
                         <button class="option-btn full-width" data-value="micronutrientes" onclick="seleccionarOpcion('tipoHierro', this)">Sachet (MN)</button>
                     </div>
                     <input type="hidden" id="tipoHierro">
@@ -90,7 +90,7 @@
                     <h2 id="resDosis">---</h2>
                     <p id="resFrascos">ENTREGAR: 0 Unid.</p>
                 </div>
-                <button id="okBtn" class="btn-cyber btn-reg hidden" onclick="registrarYReiniciar()">OK / NUEVO</button>
+                <button id="okBtn" class="btn-cyber btn-reg hidden" onclick="registrarYReiniciar()">OK</button>
             </div>
         </section>
 
