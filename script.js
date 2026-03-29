@@ -5,7 +5,7 @@ const KEY_NAME = "puntosGustavo2026";
 const API_BASE = `https://api.keyvalue.xyz/${USER_TOKEN}/${KEY_NAME}`;
 
 // --- URL DE TU IMPLEMENTACIÓN DE GOOGLE APPS SCRIPT ---
-const API_USERS = "https://script.google.com/macros/s/AKfycbxsZsab_GYsvSzwuVhMD89WmxaH35mnlHsaXP1cH3FgriUzklPQOA4rkk7Lu10642dMRA/exec"; 
+const API_USERS = "https://script.google.com/macros/s/AKfycbxADEIi50tVaweCGtHh20b-N5d3WQBmrpRtzL--ZlSwy0PfgvOdez8zXurMjQUE27Jqdg/exec"; 
 
 let SESION_ACTUAL = null; // Almacena datos del profesional logueado
 
