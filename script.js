@@ -5,9 +5,9 @@ const KEY_NAME = "puntosGustavo2026";
 const API_BASE = `https://api.keyvalue.xyz/${USER_TOKEN}/${KEY_NAME}`;
 
 // --- URL DE TU IMPLEMENTACIÓN DE GOOGLE APPS SCRIPT ---
-const API_USERS = "https://script.google.com/macros/s/AKfycbxADEIi50tVaweCGtHh20b-N5d3WQBmrpRtzL--ZlSwy0PfgvOdez8zXurMjQUE27Jqdg/exec"; 
+const API_USERS = "https://script.google.com/macros/s/AKfycbySFe1WUvNJJCDYA2PJHGo5t0cgTXNfBMRB4MYuLWOzoGHF7S69plwHzzNZdO2x-tV_7g/exec"; 
 
-let SESION_ACTUAL = null; // Almacena datos del profesional logueado
+let SESION_ACTUAL = null; // Almacena datos del profesional logueado (DNI, Nombre, Celular, EESS)
 
 const paisajesPeru = [
     "https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=1600",
@@ -43,7 +43,7 @@ async function intentarLogin() {
 
     if (!dni || !pass) { alert("DNI y Contraseña requeridos"); return; }
 
-    // Acceso Maestro
+    // Acceso Maestro (Datos predefinidos para el administrador)
     if (dni === "Omg20" && pass === "Sdmin2026*") { 
         SESION_ACTUAL = { dni: "Admin", nombre: "Gustabo Ortiz", cel: "9XXXXXXXX", eess: "Sede Central" };
         entrarApp(); 
@@ -229,13 +229,14 @@ function calcularDosis() {
 }
 
 async function registrarYReiniciar() {
-    // Capturamos los datos actuales del cálculo
+    // Capturamos los datos del cálculo realizado para enviarlos al Excel
     const peso = document.getElementById("peso").value;
     const esquemaLabel = document.getElementById("esquema").value == "2" ? "Preventivo" : "Tratamiento";
     const tipo = document.getElementById("tipoHierro").value;
     const dosis = document.getElementById("resDosis").innerText;
     const frascos = document.getElementById("resFrascos").innerText;
 
+    // Preparamos el objeto con la acción de registro_consulta y los datos del profesional logueado
     const datosConsulta = {
         action: "registro_consulta",
         userDni: SESION_ACTUAL ? SESION_ACTUAL.dni : "Desconocido",
@@ -250,7 +251,7 @@ async function registrarYReiniciar() {
     };
 
     try {
-        // 1. Enviamos la consulta al Excel (Hoja Consultas)
+        // 1. Enviamos de forma asíncrona la consulta a la hoja "Consultas" de Google Sheets
         await fetch(API_USERS, {
             method: 'POST',
             mode: 'no-cors',
@@ -258,15 +259,16 @@ async function registrarYReiniciar() {
             body: JSON.stringify(datosConsulta)
         });
 
-        // 2. Actualizamos el contador global de KeyValue
+        // 2. Actualizamos el contador global de KeyValue para las estadísticas
         const resContador = await fetch(API_BASE);
         const actual = parseInt(await resContador.text()) || 0;
         await fetch(`${API_BASE}/${actual + 1}`, { method: 'POST' });
         localStorage.setItem("puntosClinicos", actual + 1);
 
     } catch (e) { 
-        console.log("Error al procesar el registro final."); 
+        console.log("Error al procesar el registro de consulta en Google Sheets."); 
     }
 
+    // Reiniciamos la aplicación para un nuevo paciente
     location.reload(); 
 }
