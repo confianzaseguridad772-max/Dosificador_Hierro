@@ -7,18 +7,86 @@ const API_BASE = `https://api.keyvalue.xyz/${USER_TOKEN}/${KEY_NAME}`;
 // --- URL DE TU IMPLEMENTACIÓN DE GOOGLE APPS SCRIPT ---
 const API_USERS = "https://script.google.com/macros/s/AKfycbySFe1WUvNJJCDYA2PJHGo5t0cgTXNfBMRB4MYuLWOzoGHF7S69plwHzzNZdO2x-tV_7g/exec"; 
 
-let SESION_ACTUAL = null; // Almacena datos del profesional logueado (DNI, Nombre, Celular, EESS)
+let SESION_ACTUAL = null; 
 
-const paisajesPeru = [
-    "https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=1600",
-    "https://images.unsplash.com/photo-1580619305218-8423a7ef79b4?q=80&w=1600",
-    "https://images.unsplash.com/photo-1590050751217-23b609fc6f1c?q=80&w=1600"
-];
+// --- BASE DE DATOS GEOGRÁFICA Y EESS ---
+const dataGeografica = {
+    "Huánuco": {
+        "Leoncio Prado": {
+            "Rupa-Rupa": ["C.S. Castillo Grande", "P.S. Tingo María", "Hosp. Apoyo Tingo María"],
+            "Castillo Grande": ["P.S. Manco Cápac", "C.S. Castillo Grande"],
+            "José Crespo y Castillo": ["C.S. Aucayacu"]
+        },
+        "Huánuco": {
+            "Amarilis": ["C.S. Amarilis", "P.S. Llicua"],
+            "Pillco Marca": ["C.S. Potracancha"]
+        }
+    },
+    "Ucayali": {
+        "Coronel Portillo": {
+            "Callería": ["Hosp. Regional de Pucallpa", "C.S. 9 de Octubre"]
+        }
+    }
+};
 
 window.onload = () => {
     obtenerPuntosGlobales();
     cambiarFondo();
+    cargarRegiones();
 };
+
+// --- LÓGICA DE SELECTS DEPENDIENTES ---
+
+function cargarRegiones() {
+    const regSelect = document.getElementById("reg-region");
+    if(!regSelect) return;
+    regSelect.innerHTML = '<option value="">Seleccione Región</option>';
+    Object.keys(dataGeografica).forEach(reg => {
+        regSelect.innerHTML += `<option value="${reg}">${reg}</option>`;
+    });
+}
+
+function actualizarProvincias() {
+    const region = document.getElementById("reg-region").value;
+    const provSelect = document.getElementById("reg-prov");
+    provSelect.innerHTML = '<option value="">Seleccione Provincia</option>';
+    document.getElementById("reg-dist").innerHTML = '<option value="">Seleccione Distrito</option>';
+    document.getElementById("reg-eess").innerHTML = '<option value="">Seleccione EESS</option>';
+
+    if (region && dataGeografica[region]) {
+        Object.keys(dataGeografica[region]).forEach(prov => {
+            provSelect.innerHTML += `<option value="${prov}">${prov}</option>`;
+        });
+    }
+}
+
+function actualizarDistritos() {
+    const region = document.getElementById("reg-region").value;
+    const provincia = document.getElementById("reg-prov").value;
+    const distSelect = document.getElementById("reg-dist");
+    distSelect.innerHTML = '<option value="">Seleccione Distrito</option>';
+    document.getElementById("reg-eess").innerHTML = '<option value="">Seleccione EESS</option>';
+
+    if (provincia && dataGeografica[region][provincia]) {
+        Object.keys(dataGeografica[region][provincia]).forEach(dist => {
+            distSelect.innerHTML += `<option value="${dist}">${dist}</option>`;
+        });
+    }
+}
+
+function actualizarEESS() {
+    const region = document.getElementById("reg-region").value;
+    const provincia = document.getElementById("reg-prov").value;
+    const distrito = document.getElementById("reg-dist").value;
+    const eessSelect = document.getElementById("reg-eess");
+    eessSelect.innerHTML = '<option value="">Seleccione EESS</option>';
+
+    if (distrito && dataGeografica[region][provincia][distrito]) {
+        dataGeografica[region][provincia][distrito].forEach(eess => {
+            eessSelect.innerHTML += `<option value="${eess}">${eess}</option>`;
+        });
+    }
+}
 
 // --- NAVEGACIÓN ---
 function mostrarRegistro() {
@@ -43,7 +111,6 @@ async function intentarLogin() {
 
     if (!dni || !pass) { alert("DNI y Contraseña requeridos"); return; }
 
-    // Acceso Maestro (Datos predefinidos para el administrador)
     if (dni === "Omg20" && pass === "Sdmin2026*") { 
         SESION_ACTUAL = { dni: "Admin", nombre: "Gustabo Ortiz", cel: "9XXXXXXXX", eess: "Sede Central" };
         entrarApp(); 
@@ -53,7 +120,6 @@ async function intentarLogin() {
     try {
         const res = await fetch(API_USERS);
         const db = await res.json();
-        // El nuevo Apps Script devuelve: dni, p, nombre, cel, eess
         const user = db.find(u => u.dni == dni && u.p == pass);
         
         if (user) {
@@ -70,17 +136,17 @@ async function crearCuentaPropia() {
         action: "crear",
         dni: document.getElementById("reg-dni").value.trim(),
         nombre: document.getElementById("reg-nombre").value.trim(),
-        prof: document.getElementById("reg-profesion").value.trim(),
+        prof: document.getElementById("reg-profesion").value, // Captura desde el select
         cel: document.getElementById("reg-cel").value.trim(),
-        reg: document.getElementById("reg-region").value.trim(),
-        prov: document.getElementById("reg-prov").value.trim(),
-        dist: document.getElementById("reg-dist").value.trim(),
-        eess: document.getElementById("reg-eess").value.trim(),
+        reg: document.getElementById("reg-region").value,
+        prov: document.getElementById("reg-prov").value,
+        dist: document.getElementById("reg-dist").value,
+        eess: document.getElementById("reg-eess").value,
         p: document.getElementById("reg-pass").value.trim()
     };
 
-    if (!datos.dni || !datos.p || !datos.nombre) { 
-        alert("Campos obligatorios: DNI, Nombre y Contraseña"); 
+    if (!datos.dni || !datos.p || !datos.nombre || !datos.prof) { 
+        alert("Campos obligatorios: DNI, Nombre, Profesión y Contraseña"); 
         return; 
     }
 
@@ -145,6 +211,11 @@ async function obtenerPuntosGlobales() {
 }
 
 function cambiarFondo() {
+    const paisajesPeru = [
+        "https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=1600",
+        "https://images.unsplash.com/photo-1580619305218-8423a7ef79b4?q=80&w=1600",
+        "https://images.unsplash.com/photo-1590050751217-23b609fc6f1c?q=80&w=1600"
+    ];
     const bg = paisajesPeru[Math.floor(Math.random() * paisajesPeru.length)];
     document.getElementById("bg-peru").style.background = `url('${bg}')`;
 }
@@ -229,14 +300,12 @@ function calcularDosis() {
 }
 
 async function registrarYReiniciar() {
-    // Capturamos los datos del cálculo realizado para enviarlos al Excel
     const peso = document.getElementById("peso").value;
     const esquemaLabel = document.getElementById("esquema").value == "2" ? "Preventivo" : "Tratamiento";
     const tipo = document.getElementById("tipoHierro").value;
     const dosis = document.getElementById("resDosis").innerText;
     const frascos = document.getElementById("resFrascos").innerText;
 
-    // Preparamos el objeto con la acción de registro_consulta y los datos del profesional logueado
     const datosConsulta = {
         action: "registro_consulta",
         userDni: SESION_ACTUAL ? SESION_ACTUAL.dni : "Desconocido",
@@ -251,7 +320,6 @@ async function registrarYReiniciar() {
     };
 
     try {
-        // 1. Enviamos de forma asíncrona la consulta a la hoja "Consultas" de Google Sheets
         await fetch(API_USERS, {
             method: 'POST',
             mode: 'no-cors',
@@ -259,16 +327,14 @@ async function registrarYReiniciar() {
             body: JSON.stringify(datosConsulta)
         });
 
-        // 2. Actualizamos el contador global de KeyValue para las estadísticas
         const resContador = await fetch(API_BASE);
         const actual = parseInt(await resContador.text()) || 0;
         await fetch(`${API_BASE}/${actual + 1}`, { method: 'POST' });
         localStorage.setItem("puntosClinicos", actual + 1);
 
     } catch (e) { 
-        console.log("Error al procesar el registro de consulta en Google Sheets."); 
+        console.log("Error al procesar el registro."); 
     }
 
-    // Reiniciamos la aplicación para un nuevo paciente
     location.reload(); 
 }
