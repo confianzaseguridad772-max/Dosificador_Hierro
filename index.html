@@ -1,133 +1,114 @@
 <!DOCTYPE html>
-
 <html lang="es">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
     <title>DOSIS HIERRO PRO v7 - 2026</title>
-
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="style.css">
-
 </head>
-
 <body>
-
     <div id="bg-peru" class="cyber-bg"></div>
-
     <div class="overlay"></div>
 
-
-
     <div id="login-screen" class="main-card">
-
         <header class="cyber-header">
-
             <div class="logo-area"><h1>DOSIFICADOR<span>-HIERRO INFANTIL</span></h1><p>Mg. Gustabo Ortiz</p></div>
-
         </header>
-
         <div class="app-content">
-
-            <div class="field"><label>DNI</label><input type="number" id="user-input" placeholder="Ingresa DNI"></div>
-
+            <div class="field"><label>DNI / USUARIO</label><input type="number" id="user-input" placeholder="Ingresa DNI"></div>
             <div class="field"><label>CONTRASEÑA</label><input type="password" id="pass-input" placeholder="••••"></div>
-
             <button class="btn-cyber btn-calc" onclick="intentarLogin()">ENTRAR</button>
-
             <div class="pay-notice">
-
                 <button class="btn-cyber btn-reg" onclick="mostrarRegistro()" style="margin-bottom:10px">REGISTRARSE</button>
-
-                <a href="https://wa.me/51956113989" target="_blank" class="btn-wa">📲 Soporte</a>
-
+                <a href="https://wa.me/51956113989" target="_blank" class="btn-wa">📲 Soporte WhatsApp</a>
             </div>
-
         </div>
-
     </div>
-
-
 
     <div id="register-screen" class="main-card hidden">
-
         <header class="cyber-header">
-
             <div class="logo-area"><h1>REGISTRO<span>-SALUD</span></h1></div>
-
             <button onclick="mostrarLogin()" style="color:white; background:none; border:none; cursor:pointer;">✖</button>
-
         </header>
-
         <div class="app-content" style="overflow-y:auto; max-height:450px;">
-
             <div class="field"><label>DNI</label><input type="number" id="reg-dni"></div>
-
             <div class="field"><label>NOMBRES Y APELLIDOS</label><input type="text" id="reg-nombre"></div>
-
             <div class="field"><label>PROFESIÓN</label><input type="text" id="reg-profesion"></div>
-
             <div class="field"><label>CELULAR</label><input type="tel" id="reg-cel"></div>
-
             <div class="input-grid">
-
-                <div class="field"><label>REGIÓN-DEPARTAMENTO</label><input type="text" id="reg-region"></div>
-
+                <div class="field"><label>REGIÓN</label><input type="text" id="reg-region"></div>
                 <div class="field"><label>PROVINCIA</label><input type="text" id="reg-prov"></div>
-
             </div>
-
             <div class="field"><label>DISTRITO</label><input type="text" id="reg-dist"></div>
-
             <div class="field"><label>EESS (ESTABLECIMIENTO)</label><input type="text" id="reg-eess"></div>
-
             <div class="field"><label>CONTRASEÑA</label><input type="password" id="reg-pass"></div>
-
-            <button class="btn-cyber btn-calc" onclick="crearCuentaPropia()">FINALIZAR</button>
-
+            <button class="btn-cyber btn-calc" onclick="crearCuentaPropia()">FINALIZAR REGISTRO</button>
         </div>
-
     </div>
 
-
-
     <div id="app-container" class="main-card hidden">
-
         <header class="cyber-header">
-
-            <div class="logo-area"><h1>DOSIS<span>HIERRO</span></h1><p>Mg Gustabo Ortiz</p></div>
-
+            <div class="logo-area"><h1>DOSIS<span>HIERRO</span></h1><p>Mg. Gustabo Ortiz</p></div>
             <div class="version-box">P: <span id="numConsultas">0</span></div>
-
             <button onclick="abrirAdmin()" style="opacity:0.05; background:none; border:none; color:white; cursor:default;">⚙</button>
-
         </header>
 
-
-
         <section class="app-content">
-
             <div id="form-wrapper">
-
                 <div class="input-grid">
-
                     <div class="field"><label>PESO (KG)</label><input type="number" id="peso" placeholder="0.0" oninput="validar()"></div>
-
-                    <div class="field"><label>CANTIDAD DE MESES INDICADO</label><input type="number" id="meses" value="1"></div>
-
+                    <div class="field"><label>N° MESES</label><input type="number" id="meses" value="1"></div>
                 </div>
 
-
+                <div class="field">
+                    <label>FINALIDAD</label>
+                    <div class="cyber-options">
+                        <button class="option-btn" data-value="2" onclick="seleccionarOpcion('esquema', this)">🛡️ PREV</button>
+                        <button class="option-btn" data-value="3" onclick="seleccionarOpcion('esquema', this)">💊 TRAT</button>
+                    </div>
+                    <input type="hidden" id="esquema">
+                </div>
 
                 <div class="field">
+                    <label>PRESENTACIÓN</label>
+                    <div class="cyber-options grid-options">
+                        <button class="option-btn" data-value="polimaltosado_g" onclick="seleccionarOpcion('tipoHierro', this)">Gotas Polim</button>
+                        <button class="option-btn" data-value="sulfato_g" onclick="seleccionarOpcion('tipoHierro', this)">Gotas Sulf</button>
+                        <button class="option-btn" data-value="sulfato_j" onclick="seleccionarOpcion('tipoHierro', this)">Jarabe Sulf</button>
+                        <button class="option-btn" data-value="polimaltosado_j" onclick="seleccionarOpcion('tipoHierro', this)">Jarabe Polim</button>
+                        <button class="option-btn full-width" data-value="micronutrientes" onclick="seleccionarOpcion('tipoHierro', this)">Sachet (MN)</button>
+                    </div>
+                    <input type="hidden" id="tipoHierro">
+                </div>
+            </div>
 
-                    <label>FINALIDAD</label>
+            <div id="result-card" class="result-view hidden">
+                <div class="image-scanner"><img id="imgHierro" src=""><div class="scan-line"></div></div>
+                <div class="data-screen">
+                    <span class="data-label">DOSIS DIARIA</span>
+                    <h2 id="resDosis">---</h2>
+                    <p id="resFrascos">ENTREGAR: 0 Unid.</p>
+                </div>
+                <button id="okBtn" class="btn-cyber btn-reg hidden" onclick="registrarYReiniciar()">OK / NUEVO</button>
+            </div>
+        </section>
 
-                    <div class="cyber-options">
+        <footer class="app-footer" id="app-footer">
+            <button id="actionBtn" class="btn-cyber btn-disabled" onclick="calcularDosis()" disabled>CALCULAR DOSIS</button>
+        </footer>
+    </div>
 
-                        <button class="option-btn" data-value="2" onclick="seleccionarOpcion('esquema', this)">🛡️ PREVENTIVO</button>
+    <div id="admin-panel" class="main-card hidden">
+        <header class="cyber-header">
+            <div class="logo-area"><h1>PANEL<span>ADMIN</span></h1></div>
+            <button onclick="cerrarAdmin()" style="color:white; background:none; border:none;">✖</button>
+        </header>
+        <div class="app-content">
+            <div id="lista-usuarios" class="user-list"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
