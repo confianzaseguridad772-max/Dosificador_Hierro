@@ -4,8 +4,8 @@ const USER_TOKEN = "77e68224";
 const KEY_NAME = "puntosGustavo2026"; 
 const API_BASE = `https://api.keyvalue.xyz/${USER_TOKEN}/${KEY_NAME}`;
 
-// --- PEGA AQUÍ TU URL DE GOOGLE APPS SCRIPT ---
-const API_USERS = "https://script.google.com/macros/s/AKfycbxIfc35JvhVEXNVU2tVzC7Gj9pA4esY9Oyd77IYG7-ZsxOD-8LkG-9OphfL0P7enTSd2Q/exec"; 
+// --- IMPORTANTE: Reemplaza con tu URL de la "Nueva implementación" ---
+const API_USERS = "https://script.google.com/macros/s/AKfycbxsZsab_GYsvSzwuVhMD89WmxaH35mnlHsaXP1cH3FgriUzklPQOA4rkk7Lu10642dMRA/exec"; 
 
 const paisajesPeru = [
     "https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=1600",
@@ -18,7 +18,7 @@ window.onload = () => {
     cambiarFondo();
 };
 
-// --- NAVEGACIÓN DE INTERFAZ ---
+// --- NAVEGACIÓN ---
 function mostrarRegistro() {
     document.getElementById("login-screen").classList.add("hidden");
     document.getElementById("register-screen").classList.remove("hidden");
@@ -34,14 +34,13 @@ function entrarApp() {
     document.getElementById("app-container").classList.remove("hidden");
 }
 
-// --- SEGURIDAD Y ACCESO ---
+// --- SEGURIDAD Y LOGIN ---
 async function intentarLogin() {
     const dni = document.getElementById("user-input").value.trim();
     const pass = document.getElementById("pass-input").value.trim();
 
     if (!dni || !pass) { alert("DNI y Contraseña requeridos"); return; }
 
-    // Acceso Maestro Administrador
     if (dni === "Omg20" && pass === "Sdmin2026*") { entrarApp(); return; }
 
     try {
@@ -51,11 +50,10 @@ async function intentarLogin() {
         
         if (user) entrarApp();
         else alert("DNI o contraseña incorrectos.");
-    } catch (e) { alert("Error al validar con la base de datos."); }
+    } catch (e) { alert("Error de conexión con el servidor."); }
 }
 
 async function crearCuentaPropia() {
-    // Captura manual de cada campo para asegurar el envío completo
     const datos = {
         action: "crear",
         dni: document.getElementById("reg-dni").value.trim(),
@@ -69,40 +67,35 @@ async function crearCuentaPropia() {
         p: document.getElementById("reg-pass").value.trim()
     };
 
-    // Validación de campos obligatorios
     if (!datos.dni || !datos.p || !datos.nombre) { 
         alert("Campos obligatorios: DNI, Nombre y Contraseña"); 
         return; 
     }
 
     const btn = document.querySelector("#register-screen .btn-calc");
-    const originalText = btn.innerText;
-    btn.innerText = "PROCESANDO...";
+    btn.innerText = "ENVIANDO DATOS...";
     btn.disabled = true;
 
     try {
         await fetch(API_USERS, {
             method: 'POST',
-            mode: 'no-cors', // Necesario para Google Apps Script
+            mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datos)
         });
-
-        alert("¡Registro exitoso! Ya puedes ingresar con tu DNI.");
+        alert("¡Registro exitoso! Ya puedes iniciar sesión.");
         mostrarLogin();
-        // Limpiar formulario
-        document.querySelectorAll("#register-screen input").forEach(input => input.value = "");
     } catch (err) { 
-        alert("Hubo un error al enviar los datos."); 
+        alert("Error al registrar."); 
     } finally { 
-        btn.innerText = originalText; 
+        btn.innerText = "FINALIZAR REGISTRO"; 
         btn.disabled = false; 
     }
 }
 
-// --- PANEL DE ADMINISTRACIÓN ---
+// --- PANEL ADMIN ---
 function abrirAdmin() {
-    const p = prompt("Clave de Administrador:");
+    const p = prompt("Acceso Maestro:");
     if (p === "Sdmin2026*") {
         document.getElementById("app-container").classList.add("hidden");
         document.getElementById("admin-panel").classList.remove("hidden");
@@ -120,14 +113,15 @@ async function listarUsuarios() {
         const res = await fetch(API_USERS);
         const db = await res.json();
         const container = document.getElementById("lista-usuarios");
-        container.innerHTML = "<h3>Usuarios Registrados:</h3>";
+        container.innerHTML = "<h3>Usuarios (DNI):</h3>";
         db.forEach(u => { 
-            container.innerHTML += `<div class="user-item">👤 DNI: ${u.dni} | 🔑: ${u.p}</div>`; 
+            container.innerHTML += `<div class="user-item">👤 ${u.dni} | 🔑 ${u.p}</div>`; 
         });
-    } catch (e) { console.error("Error cargando lista."); }
+    } catch (e) { console.log("Error listando."); }
 }
 
-// --- CALCULADORA Y UTILIDADES ---
+// --- CALCULADORA Y ALERTAS CLÍNICAS ---
+
 async function obtenerPuntosGlobales() {
     try {
         const res = await fetch(API_BASE);
@@ -157,17 +151,29 @@ function seleccionarOpcion(idHidden, elemento) {
 }
 
 function validar() {
-    const pInput = document.getElementById("peso");
-    let pVal = parseFloat(pInput.value);
+    const pesoInput = document.getElementById("peso");
+    let peso = parseFloat(pesoInput.value);
     
-    // Auto-corrección si ponen gramos (ej. 8500 -> 8.5)
-    if (pVal > 100) { pInput.value = (pVal/1000).toFixed(1); }
+    // Auto-corrección de gramos a kilos
+    if (peso > 100) { 
+        peso = peso / 1000; 
+        pesoInput.value = peso.toFixed(1); 
+    }
 
-    const esc = document.getElementById("esquema").value;
-    const tip = document.getElementById("tipoHierro").value;
+    const esquema = document.getElementById("esquema").value;
+    const tipo = document.getElementById("tipoHierro").value;
     const btn = document.getElementById("actionBtn");
 
-    if (parseFloat(pInput.value) > 0 && esc && tip) {
+    // --- ALERTAS DE SEGURIDAD CLÍNICA ---
+    if (peso > 0 && tipo) {
+        if (tipo.includes("_g") && peso > 12) {
+            alert("⚠️ Alerta: El peso es elevado para gotas (>12kg). Evalúe usar Jarabe.");
+        } else if (tipo.includes("_j") && peso < 8) {
+            alert("⚠️ Alerta: El peso es bajo para jarabe (<8kg). Evalúe usar Gotas.");
+        }
+    }
+
+    if (peso > 0 && peso < 100 && esquema && tipo) {
         btn.disabled = false;
         btn.className = "btn-cyber btn-calc";
     } else {
@@ -204,7 +210,7 @@ function calcularDosis() {
     }
 
     document.getElementById("resDosis").innerText = dosis;
-    document.getElementById("resFrascos").innerText = `ENTREGAR: ${frascos} Unid.`;
+    document.getElementById("resFrascos").innerText = `ENTREGAR: ${frascos} Unidades.`;
     
     document.getElementById("form-wrapper").classList.add("hidden");
     document.getElementById("app-footer").classList.add("hidden");
@@ -215,9 +221,9 @@ function calcularDosis() {
 async function registrarYReiniciar() {
     try {
         const res = await fetch(API_BASE);
-        const act = parseInt(await res.text()) || 0;
-        await fetch(`${API_BASE}/${act + 1}`, { method: 'POST' });
-        localStorage.setItem("puntosClinicos", act + 1);
-    } catch (e) { console.log("Error al actualizar contador."); }
+        const actual = parseInt(await res.text()) || 0;
+        await fetch(`${API_BASE}/${actual + 1}`, { method: 'POST' });
+        localStorage.setItem("puntosClinicos", actual + 1);
+    } catch (e) { console.log("Error puntos."); }
     location.reload(); 
 }
