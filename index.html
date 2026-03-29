@@ -34,14 +34,48 @@
         <div class="app-content" style="overflow-y:auto; max-height:450px;">
             <div class="field"><label>DNI</label><input type="number" id="reg-dni"></div>
             <div class="field"><label>NOMBRES Y APELLIDOS</label><input type="text" id="reg-nombre"></div>
-            <div class="field"><label>PROFESIÓN</label><input type="text" id="reg-profesion"></div>
-            <div class="field"><label>CELULAR</label><input type="tel" id="reg-cel"></div>
-            <div class="input-grid">
-                <div class="field"><label>REGIÓN</label><input type="text" id="reg-region"></div>
-                <div class="field"><label>PROVINCIA</label><input type="text" id="reg-prov"></div>
+            
+            <div class="field">
+                <label>PROFESIÓN</label>
+                <select id="reg-profesion">
+                    <option value="">Seleccione...</option>
+                    <option value="Enfermería">Enfermería</option>
+                    <option value="Agente Comunitario de Salud">Agente Comunitario de Salud</option>
+                    <option value="Estudiante">Estudiante</option>
+                    <option value="Madre">Madre</option>
+                    <option value="Otros">Otros</option>
+                </select>
             </div>
-            <div class="field"><label>DISTRITO</label><input type="text" id="reg-dist"></div>
-            <div class="field"><label>EESS (ESTABLECIMIENTO)</label><input type="text" id="reg-eess"></div>
+
+            <div class="field"><label>CELULAR</label><input type="tel" id="reg-cel"></div>
+            
+            <div class="input-grid">
+                <div class="field">
+                    <label>REGIÓN</label>
+                    <select id="reg-region" onchange="actualizarProvincias()"></select>
+                </div>
+                <div class="field">
+                    <label>PROVINCIA</label>
+                    <select id="reg-prov" onchange="actualizarDistritos()">
+                        <option value="">Seleccione Provincia</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>DISTRITO</label>
+                <select id="reg-dist" onchange="actualizarEESS()">
+                    <option value="">Seleccione Distrito</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>EESS (ESTABLECIMIENTO)</label>
+                <select id="reg-eess">
+                    <option value="">Seleccione EESS</option>
+                </select>
+            </div>
+
             <div class="field"><label>CONTRASEÑA</label><input type="password" id="reg-pass"></div>
             <button class="btn-cyber btn-calc" onclick="crearCuentaPropia()">FINALIZAR REGISTRO</button>
         </div>
@@ -49,7 +83,7 @@
 
     <div id="app-container" class="main-card hidden">
         <header class="cyber-header">
-            <div class="logo-area"><h1>DOSIS<span>HIERRO</span></h1><p>2Mg Gustabo Ortiz</p></div>
+            <div class="logo-area"><h1>DOSIS<span>HIERRO</span></h1><p>Mg. Gustabo Ortiz</p></div>
             <div class="version-box">P: <span id="numConsultas">0</span></div>
             <button onclick="abrirAdmin()" style="opacity:0.05; background:none; border:none; color:white; cursor:default;">⚙</button>
         </header>
