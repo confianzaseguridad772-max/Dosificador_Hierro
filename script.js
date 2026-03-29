@@ -3,8 +3,7 @@ const USER_TOKEN = "77e68224";
 const KEY_NAME = "puntosGustavo2026"; 
 const API_BASE = `https://api.keyvalue.xyz/${USER_TOKEN}/${KEY_NAME}`;
 
-// --- CONEXIÓN A GOOGLE SHEETS ---
-// Reemplaza esta URL con la que obtuviste de Extensiones > Apps Script > Implementar
+// --- CONFIGURACIÓN DE APPS SCRIPT ---
 const API_USERS = "https://script.google.com/macros/s/AKfycbyevNF0dg4V_3PjldD97IbOfaB57_FY2Wn1dX-7bwKWUMXgO6FTDClge-0-3yPJcO_TPw/exec";
 
 const paisajesPeru = [
@@ -18,39 +17,110 @@ window.onload = () => {
     cambiarFondo();
 };
 
-// --- NUEVAS FUNCIONES DE SEGURIDAD (CONECTADAS A EXCEL) ---
+// --- NAVEGACIÓN ENTRE PANTALLAS ---
+
+function mostrarRegistro() {
+    document.getElementById("login-screen").classList.add("hidden");
+    document.getElementById("register-screen").classList.remove("hidden");
+}
+
+function mostrarLogin() {
+    document.getElementById("register-screen").classList.add("hidden");
+    document.getElementById("login-screen").classList.remove("hidden");
+}
+
+function entrarApp() {
+    document.getElementById("login-screen").classList.add("hidden");
+    document.getElementById("app-container").classList.remove("hidden");
+}
+
+// --- LÓGICA DE USUARIOS Y SEGURIDAD ---
 
 async function intentarLogin() {
-    const u = document.getElementById("user-input").value;
-    const p = document.getElementById("pass-input").value;
+    const dni = document.getElementById("user-input").value.trim();
+    const pass = document.getElementById("pass-input").value.trim();
 
-    // Acceso Maestro para Gustavo
-    if(u === "Omg20" && p === "Sdmin2026*") {
-        document.getElementById("login-screen").classList.add("hidden");
-        document.getElementById("app-container").classList.remove("hidden");
+    if (!dni || !pass) { alert("Ingresa tu DNI y contraseña"); return; }
+
+    // Acceso Maestro
+    if (dni === "Omg20" && pass === "Sdmin2026*") {
+        entrarApp();
         return;
     }
 
     try {
-        // Obtenemos los usuarios desde Google Sheets
         const res = await fetch(API_USERS);
         const db = await res.json();
-        const usuarioValido = db.find(item => item.u === u && item.p === p);
         
-        if(usuarioValido) {
-            document.getElementById("login-screen").classList.add("hidden");
-            document.getElementById("app-container").classList.remove("hidden");
+        // Buscamos coincidencia de DNI y Password
+        const usuarioValido = db.find(item => item.dni == dni && item.p == pass);
+        
+        if (usuarioValido) {
+            entrarApp();
         } else {
-            alert("Usuario o clave incorrectos. Solicita tu acceso al WhatsApp");
+            alert("DNI o contraseña incorrectos. Si no tienes cuenta, regístrate.");
         }
-    } catch(e) {
-        alert("Error de conexión con la base de datos. Verifica la URL de Apps Script.");
+    } catch (e) {
+        alert("Error de conexión con la base de datos.");
     }
 }
 
+async function crearCuentaPropia() {
+    const dni = document.getElementById("reg-dni").value.trim();
+    const nombre = document.getElementById("reg-nombre").value.trim();
+    const prof = document.getElementById("reg-profesion").value.trim();
+    const cel = document.getElementById("reg-cel").value.trim();
+    const reg = document.getElementById("reg-region").value.trim();
+    const prov = document.getElementById("reg-prov").value.trim();
+    const dist = document.getElementById("reg-dist").value.trim();
+    const eess = document.getElementById("reg-eess").value.trim();
+    const pass = document.getElementById("reg-pass").value.trim();
+
+    if (!dni || !pass || !nombre) { 
+        alert("DNI, Nombre y Contraseña son campos obligatorios."); 
+        return; 
+    }
+
+    const btn = document.querySelector("#register-screen .btn-calc");
+    btn.innerText = "PROCESANDO...";
+    btn.disabled = true;
+
+    const datos = {
+        action: "crear",
+        dni: dni,
+        nombre: nombre,
+        prof: prof,
+        cel: cel,
+        reg: reg,
+        prov: prov,
+        dist: dist,
+        eess: eess,
+        p: pass
+    };
+
+    try {
+        await fetch(API_USERS, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datos)
+        });
+
+        alert("¡Registro exitoso! Ya puedes iniciar sesión con tu DNI.");
+        mostrarLogin();
+    } catch (err) {
+        alert("Hubo un problema al enviar el registro.");
+    } finally {
+        btn.innerText = "FINALIZAR REGISTRO";
+        btn.disabled = false;
+    }
+}
+
+// --- FUNCIONES DE ADMINISTRADOR ---
+
 function abrirAdmin() {
-    const p = prompt("Ingresa la clave:");
-    if(p === "Sdmin2026*") {
+    const p = prompt("Clave de Administrador:");
+    if (p === "Sdmin2026*") {
         document.getElementById("app-container").classList.add("hidden");
         document.getElementById("admin-panel").classList.remove("hidden");
         listarUsuarios();
@@ -62,49 +132,21 @@ function cerrarAdmin() {
     document.getElementById("app-container").classList.remove("hidden");
 }
 
-async function crearNuevoUsuario() {
-    const u = document.getElementById("new-u").value;
-    const p = document.getElementById("new-p").value;
-    const e = document.getElementById("new-e").value;
-    if(!u || !p) { alert("Llena al menos usuario y clave"); return; }
-
-    try {
-        // Enviamos los datos al Google Sheets
-        const response = await fetch(API_USERS, {
-            method: 'POST',
-            mode: 'no-cors', // Necesario para Google Apps Script
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: "crear", u: u, p: p, e: e })
-        });
-
-        alert("¡Petición enviada! Verifica tu Google Sheets. El usuario " + u + " se está procesando.");
-        document.getElementById("new-u").value = "";
-        document.getElementById("new-p").value = "";
-        document.getElementById("new-e").value = "";
-        
-        // Esperamos un momento para que Google actualice y refrescamos la lista
-        setTimeout(listarUsuarios, 2000);
-
-    } catch(err) { 
-        alert("Error al guardar en Google Sheets."); 
-    }
-}
-
 async function listarUsuarios() {
     try {
         const res = await fetch(API_USERS);
         const db = await res.json();
         const container = document.getElementById("lista-usuarios");
-        container.innerHTML = "<h3>Usuarios con Acceso (Excel):</h3>";
+        container.innerHTML = "<h3>Usuarios Registrados (Excel):</h3>";
         db.forEach(user => {
-            container.innerHTML += `<div class="user-item">👤 ${user.u} | 🔑 ${user.p}</div>`;
+            container.innerHTML += `<div class="user-item">👤 DNI: ${user.dni} | 🔑 ${user.p}</div>`;
         });
-    } catch(e) { 
-        console.log("Error al listar desde Excel."); 
+    } catch (e) {
+        console.log("Error al listar desde Excel.");
     }
 }
 
-// --- TUS FUNCIONES ORIGINALES (SIN CAMBIOS) ---
+// --- CALCULADORA Y FUNCIONES ORIGINALES ---
 
 async function obtenerPuntosGlobales() {
     try {
@@ -121,7 +163,7 @@ async function obtenerPuntosGlobales() {
 function cambiarFondo() {
     const bg = paisajesPeru[Math.floor(Math.random() * paisajesPeru.length)];
     const bgElement = document.getElementById("bg-peru");
-    if(bgElement) bgElement.style.background = `url('${bg}')`;
+    if (bgElement) bgElement.style.background = `url('${bg}')`;
 }
 
 function seleccionarOpcion(idHidden, elemento) {
@@ -132,7 +174,7 @@ function seleccionarOpcion(idHidden, elemento) {
     const valor = elemento.getAttribute('data-value');
     document.getElementById(idHidden).value = valor;
 
-    if(idHidden === 'tipoHierro') {
+    if (idHidden === 'tipoHierro') {
         const img = document.getElementById("imgHierro");
         img.src = IMGS_PATH + valor + ".jpg";
         document.getElementById("result-card").classList.remove("hidden");
@@ -223,12 +265,12 @@ async function registrarYReiniciar() {
             const texto = await res.text();
             actual = parseInt(texto) || 0;
         }
-        let nuevoTotal = actual + 7;
+        let nuevoTotal = actual + 1;
         await fetch(`${API_BASE}/${nuevoTotal}`, { method: 'POST' });
         localStorage.setItem("puntosClinicos", nuevoTotal);
     } catch (err) {
         let local = parseInt(localStorage.getItem("puntosClinicos")) || 0;
-        localStorage.setItem("puntosClinicos", local + 7);
+        localStorage.setItem("puntosClinicos", local + 1);
     }
     location.reload(); 
 }
