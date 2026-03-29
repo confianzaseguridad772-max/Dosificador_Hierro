@@ -7,6 +7,8 @@ const API_BASE = `https://api.keyvalue.xyz/${USER_TOKEN}/${KEY_NAME}`;
 // --- URL DE TU IMPLEMENTACIÓN DE GOOGLE APPS SCRIPT ---
 const API_USERS = "https://script.google.com/macros/s/AKfycbxsZsab_GYsvSzwuVhMD89WmxaH35mnlHsaXP1cH3FgriUzklPQOA4rkk7Lu10642dMRA/exec"; 
 
+let SESION_ACTUAL = null; // Almacena datos del profesional logueado
+
 const paisajesPeru = [
     "https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=1600",
     "https://images.unsplash.com/photo-1580619305218-8423a7ef79b4?q=80&w=1600",
@@ -42,15 +44,24 @@ async function intentarLogin() {
     if (!dni || !pass) { alert("DNI y Contraseña requeridos"); return; }
 
     // Acceso Maestro
-    if (dni === "Omg20" && pass === "Sdmin2026*") { entrarApp(); return; }
+    if (dni === "Omg20" && pass === "Sdmin2026*") { 
+        SESION_ACTUAL = { dni: "Admin", nombre: "Gustabo Ortiz", cel: "9XXXXXXXX", eess: "Sede Central" };
+        entrarApp(); 
+        return; 
+    }
 
     try {
         const res = await fetch(API_USERS);
         const db = await res.json();
+        // El nuevo Apps Script devuelve: dni, p, nombre, cel, eess
         const user = db.find(u => u.dni == dni && u.p == pass);
         
-        if (user) entrarApp();
-        else alert("DNI o contraseña incorrectos.");
+        if (user) {
+            SESION_ACTUAL = user; 
+            entrarApp();
+        } else {
+            alert("DNI o contraseña incorrectos.");
+        }
     } catch (e) { alert("Error de conexión con el servidor."); }
 }
 
@@ -155,7 +166,6 @@ function validar() {
     const pesoInput = document.getElementById("peso");
     let peso = parseFloat(pesoInput.value);
     
-    // Auto-corrección de gramos a kilos (ej. 8500 -> 8.5)
     if (peso > 100) { 
         peso = peso / 1000; 
         pesoInput.value = peso.toFixed(1); 
@@ -165,7 +175,6 @@ function validar() {
     const tipo = document.getElementById("tipoHierro").value;
     const btn = document.getElementById("actionBtn");
 
-    // --- ALERTAS DE SEGURIDAD CLÍNICA REINTEGRADAS ---
     if (peso > 0 && tipo) {
         if (tipo.includes("_g") && peso >= 12) {
             alert("⚠️ ALERTA: El peso es de " + peso + " kg. Se sugiere usar JARABE para mayor precisión en la dosis.");
@@ -220,11 +229,44 @@ function calcularDosis() {
 }
 
 async function registrarYReiniciar() {
+    // Capturamos los datos actuales del cálculo
+    const peso = document.getElementById("peso").value;
+    const esquemaLabel = document.getElementById("esquema").value == "2" ? "Preventivo" : "Tratamiento";
+    const tipo = document.getElementById("tipoHierro").value;
+    const dosis = document.getElementById("resDosis").innerText;
+    const frascos = document.getElementById("resFrascos").innerText;
+
+    const datosConsulta = {
+        action: "registro_consulta",
+        userDni: SESION_ACTUAL ? SESION_ACTUAL.dni : "Desconocido",
+        userName: SESION_ACTUAL ? SESION_ACTUAL.nombre : "Sin Nombre",
+        userCel: SESION_ACTUAL ? SESION_ACTUAL.cel : "-",
+        userEess: SESION_ACTUAL ? SESION_ACTUAL.eess : "-",
+        pesoPaciente: peso,
+        esquema: esquemaLabel,
+        tipoHierro: tipo,
+        dosis: dosis,
+        frascos: frascos
+    };
+
     try {
-        const res = await fetch(API_BASE);
-        const actual = parseInt(await res.text()) || 0;
+        // 1. Enviamos la consulta al Excel (Hoja Consultas)
+        await fetch(API_USERS, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datosConsulta)
+        });
+
+        // 2. Actualizamos el contador global de KeyValue
+        const resContador = await fetch(API_BASE);
+        const actual = parseInt(await resContador.text()) || 0;
         await fetch(`${API_BASE}/${actual + 1}`, { method: 'POST' });
         localStorage.setItem("puntosClinicos", actual + 1);
-    } catch (e) { console.log("Error puntos."); }
+
+    } catch (e) { 
+        console.log("Error al procesar el registro final."); 
+    }
+
     location.reload(); 
 }
