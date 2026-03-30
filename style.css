@@ -75,6 +75,13 @@ input {
 
 input:focus { border-color: var(--neon-cyan); background: rgba(0, 242, 254, 0.05); }
 
+/* --- AJUSTE PARA PESO Y MESES JUNTOS --- */
+.input-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 12px; 
+}
+
 .cyber-options { display: flex; gap: 10px; }
 .grid-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .full-width { grid-column: span 2; }
@@ -161,3 +168,9 @@ input:focus { border-color: var(--neon-cyan); background: rgba(0, 242, 254, 0.05
 }
 
 .hidden { display: none !important; }
+
+/* Ajuste responsivo extra */
+@media (max-width: 350px) {
+    .input-grid { gap: 8px; }
+    .field label { font-size: 0.55rem; }
+}
