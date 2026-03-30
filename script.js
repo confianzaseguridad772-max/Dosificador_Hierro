@@ -11,6 +11,8 @@ let SESION_ACTUAL = null; // Almacena datos del profesional logueado (DNI, Nombr
 
 const paisajesPeru = [
     "https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=1600",
+    "https://unsplash.com/es/fotos/cumbres-montanosas-escarpadas-iluminadas-por-la-suave-luz-del-atardecer-NwZmYW5ETnE",
+    "https://unsplash.com/es/fotos/perla-de-oriente-shanghai-china-tomada-durante-el-dia-uKyzXEc2k_s",
     "https://images.unsplash.com/photo-1580619305218-8423a7ef79b4?q=80&w=1600",
     "https://images.unsplash.com/photo-1590050751217-23b609fc6f1c?q=80&w=1600"
 ];
