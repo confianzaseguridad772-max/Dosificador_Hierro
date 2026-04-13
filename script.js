@@ -1,80 +1,124 @@
-const API_USERS = "https://script.google.com/macros/s/AKfycbyetvzKoi8PPF9P6IYZ3O3gjLESLm-KhKk0V71NyBuIrA9EZfiKSn6EKjoPNi0ugeXjuQ/exec"; 
+// CONFIGURACIÓN - REEMPLAZAR CON TU URL
+const API_USERS = "https://script.google.com/macros/s/AKfycbxHG-9csNlwn6jntHSM6Hw-CgqMDrQqI722y7-bmfZYIDh2-GDutkxKUSUHB6o5tDE_FQ/exec"; 
 const API_BASE_PUNTOS = "https://api.keyvalue.xyz/77e68224/puntosGustavo2026";
+
 let SESION_ACTUAL = null;
 
-// Imágenes de fondo dinámicas
 const paisajesPeru = [
     "https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=1200",
     "https://images.unsplash.com/photo-1580619305218-8423a7ef79b4?q=80&w=1200"
 ];
 
 window.onload = () => {
-    document.getElementById("bg-peru").style.background = `url('${paisajesPeru[Math.floor(Math.random() * paisajesPeru.length)]}') center/cover`;
-    obtenerPuntos();
+    const bg = paisajesPeru[Math.floor(Math.random() * paisajesPeru.length)];
+    document.getElementById("bg-peru").style.background = `url('${bg}') center/cover`;
+    obtenerPuntosGlobales();
 };
 
+// NAVEGACIÓN
+function mostrarRegistro() {
+    document.getElementById("login-screen").classList.add("hidden");
+    document.getElementById("register-screen").classList.remove("hidden");
+}
+
+function mostrarLogin() {
+    document.getElementById("register-screen").classList.add("hidden");
+    document.getElementById("login-screen").classList.remove("hidden");
+}
+
+// LOGIN SOLO CON DNI
 async function intentarLogin() {
     const dni = document.getElementById("user-input").value.trim();
-    if (!dni) return alert("Ingresa tu DNI");
+    if (!dni) return;
+
+    // Acceso Maestro Original
+    if (dni === "Omg20") {
+        SESION_ACTUAL = { dni: "Admin", nombre: "Gustabo Ortiz", eess: "Sede Central" };
+        iniciarApp(); return;
+    }
 
     try {
+        document.getElementById("nurse-msg").innerText = "Buscando en la base de datos...";
         const res = await fetch(API_USERS);
-        const db = await res.json();
-        const user = db.find(u => u.dni == dni);
-        
+        const usuarios = await res.json();
+        const user = usuarios.find(u => u.dni == dni);
+
         if (user) {
             SESION_ACTUAL = user;
-            document.getElementById("profesional-name").innerText = user.nombre;
-            document.getElementById("login-screen").classList.add("hidden");
-            document.getElementById("app-container").classList.remove("hidden");
+            iniciarApp();
         } else {
-            alert("DNI no registrado en la Base de Datos.");
+            document.getElementById("nurse-msg").innerText = "DNI no encontrado. Regístrate.";
         }
-    } catch (e) { alert("Error de conexión."); }
+    } catch (e) { alert("Error de conexión"); }
 }
 
-function seleccionarOpcion(id, btn) {
-    btn.parentElement.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-    document.getElementById(id).value = btn.dataset.value;
-    autoCalcular();
+function iniciarApp() {
+    document.getElementById("login-screen").classList.add("hidden");
+    document.getElementById("app-container").classList.remove("hidden");
+    document.getElementById("prof-display").innerText = "Dr(a). " + SESION_ACTUAL.nombre;
+    document.getElementById("nurse-msg").innerText = "¡Excelente! Empecemos con el paciente.";
 }
 
-function autoCalcular() {
-    const peso = parseFloat(document.getElementById("peso").value);
-    const meses = parseInt(document.getElementById("meses").value) || 1;
-    const esquema = parseFloat(document.getElementById("esquema").value);
+// CÁLCULO AUTOMÁTICO Y VALIDACIÓN ORIGINAL
+function validarYCalcular() {
+    const pesoInput = document.getElementById("peso");
+    let peso = parseFloat(pesoInput.value);
+
+    // Función original: Corrección de gramos a kilos
+    if (peso > 100) {
+        peso = peso / 1000;
+        pesoInput.value = peso.toFixed(1);
+    }
+
+    const esquema = document.getElementById("esquema").value;
     const tipo = document.getElementById("tipoHierro").value;
 
     if (peso > 0 && esquema && tipo) {
-        let mgDia = peso * esquema;
+        document.getElementById("result-card").classList.remove("hidden");
+        
+        // Lógica de cálculo original
+        let mgDia = peso * parseFloat(esquema);
         let dosis = ""; let frascos = 0;
+
+        // Alertas originales
+        if (tipo.includes("_g") && peso >= 12) {
+            document.getElementById("nurse-msg").innerText = "⚠️ Peso alto: Sugiero usar JARABE.";
+        } else if (tipo.includes("_j") && peso < 8) {
+            document.getElementById("nurse-msg").innerText = "⚠️ Peso bajo: Sugiero usar GOTAS.";
+        } else {
+            document.getElementById("nurse-msg").innerText = "La dosis es correcta según la NTS.";
+        }
 
         switch(tipo) {
             case "polimaltosado_g": 
                 dosis = Math.round(mgDia / 2.5) + " gotas"; 
-                frascos = Math.ceil(((mgDia / 50) * 30 * meses) / 30); break;
+                frascos = Math.ceil(((mgDia / 50) * 30) / 30); break;
             case "sulfato_g": 
                 dosis = Math.round(mgDia / 1.25) + " gotas"; 
-                frascos = Math.ceil(((mgDia / 25) * 30 * meses) / 30); break;
+                frascos = Math.ceil(((mgDia / 25) * 30) / 30); break;
             case "sulfato_j": 
                 dosis = (mgDia / 3).toFixed(1) + " ml"; 
-                frascos = Math.ceil(((mgDia / 3) * 30 * meses) / 180); break;
+                frascos = Math.ceil(((mgDia / 3) * 30) / 180); break;
             case "polimaltosado_j": 
                 dosis = (mgDia / 10).toFixed(1) + " ml"; 
-                frascos = Math.ceil(((mgDia / 10) * 30 * meses) / 100); break;
+                frascos = Math.ceil(((mgDia / 10) * 30) / 100); break;
             case "micronutrientes": 
-                dosis = "1 SOBRE (Sachet)"; 
-                frascos = 30 * meses; break;
+                dosis = "1 SOBRE"; frascos = 30; break;
         }
 
         document.getElementById("resDosis").innerText = dosis;
-        document.getElementById("resFrascos").innerText = `Entregar: ${frascos} Unidades`;
-        document.getElementById("result-card").classList.remove("hidden");
+        document.getElementById("resFrascos").innerText = `ENTREGAR: ${frascos} Unidades`;
+    } else {
+        document.getElementById("result-card").classList.add("hidden");
     }
 }
 
+// REGISTRO Y ENVÍO OPTIMIZADO
 async function registrarYReiniciar() {
+    const btn = document.getElementById("okBtn");
+    btn.disabled = true;
+    btn.innerText = "REGISTRANDO...";
+
     const datos = {
         action: "registro_consulta",
         userDni: SESION_ACTUAL.dni,
@@ -87,19 +131,33 @@ async function registrarYReiniciar() {
         frascos: document.getElementById("resFrascos").innerText
     };
 
-    // Envío silencioso a Google Sheets
-    fetch(API_USERS, { method: 'POST', mode: 'no-cors', body: JSON.stringify(datos) });
-    
-    // Sumar punto en KeyValue
-    const actual = parseInt(document.getElementById("numConsultas").innerText);
-    fetch(`${API_BASE_PUNTOS}/${actual + 1}`, { method: 'POST' });
+    try {
+        await fetch(API_USERS, { method: 'POST', mode: 'no-cors', body: JSON.stringify(datos) });
+        
+        // Contador global original KeyValue
+        const resCont = await fetch(API_BASE_PUNTOS);
+        const actual = parseInt(await resCont.text()) || 0;
+        await fetch(`${API_BASE_PUNTOS}/${actual + 1}`, { method: 'POST' });
 
-    alert("Registro enviado a la Nube. ¡Siguiente paciente!");
-    location.reload();
+        alert("¡Consulta registrada con éxito!");
+        location.reload();
+    } catch (e) { 
+        alert("Error al guardar."); 
+        btn.disabled = false; 
+    }
 }
 
-async function obtenerPuntos() {
+// OTRAS FUNCIONES ORIGINALES
+async function obtenerPuntosGlobales() {
     const res = await fetch(API_BASE_PUNTOS);
     const val = await res.text();
     document.getElementById("numConsultas").innerText = val || 0;
+}
+
+function abrirAdmin() {
+    const p = prompt("Acceso Maestro:");
+    if (p === "Sdmin2026*") {
+        document.getElementById("admin-panel").classList.remove("hidden");
+        listarUsuarios();
+    }
 }
