@@ -3,104 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sistema Base Hierro 2026 - V7 PRO</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <title>Base Hierro v7 Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="bg-peru"></div>
     <div class="overlay"></div>
 
-    <div class="nurse-container">
-        <div class="nurse-avatar-live">
-            <img src="https://cdn-icons-png.flaticon.com/512/3844/3844391.png" alt="Enfermera">
-            <div class="flag-badge"></div>
-        </div>
-        <div class="nurse-bubble" id="nurse-msg">¡Hola! Ingresa tu DNI para comenzar.</div>
-    </div>
-
-    <div id="login-screen" class="glass-card">
-        <div class="header-minimal">
-            <h1>SISTEMA<span>HIERRO</span></h1>
-            <p>Gestión Pediátrica 2026</p>
-        </div>
-        <div class="input-group">
-            <label>DNI DEL PROFESIONAL</label>
-            <input type="number" id="user-input" placeholder="Ingrese su DNI">
-        </div>
-        <button class="btn-main" onclick="intentarLogin()">INICIAR SESIÓN</button>
-        <button class="btn-text" onclick="mostrarRegistro()">¿No tienes cuenta? Regístrate</button>
-        <div class="admin-access" onclick="abrirAdmin()">⚙️</div>
-    </div>
-
-    <div id="register-screen" class="glass-card hidden">
-        <h2>Registro Profesional</h2>
-        <div class="grid-form">
-            <input type="number" id="reg-dni" placeholder="DNI">
-            <input type="text" id="reg-nombre" placeholder="Nombre y Apellidos">
-            <input type="text" id="reg-profesion" placeholder="Profesión">
-            <input type="number" id="reg-cel" placeholder="Celular">
-            <input type="text" id="reg-eess" placeholder="Establecimiento (EESS)">
-        </div>
-        <button class="btn-main" onclick="crearCuentaPropia()">FINALIZAR REGISTRO</button>
-        <button class="btn-text" onclick="mostrarLogin()">Volver al Login</button>
-    </div>
-
-    <div id="app-container" class="glass-card hidden">
-        <div class="user-info-bar">
-            <span id="prof-display">Bienvenido</span>
-            <span class="badge">Consultas: <span id="numConsultas">0</span></span>
-        </div>
-
-        <div class="calculator-body">
-            <div class="field">
-                <label>PESO DEL PACIENTE (KG)</label>
-                <input type="number" id="peso" step="0.1" placeholder="Ej: 8.5" oninput="validarYCalcular()">
+    <div class="main-wrapper">
+        <div class="nurse-section">
+            <div class="nurse-circle">
+                <img src="https://cdn-icons-png.flaticon.com/512/3844/3844391.png" alt="Nurse">
+                <div class="peru-flag"></div>
             </div>
+            <div class="bubble" id="nurse-msg">¡Hola! Ingresa tu DNI para iniciar.</div>
+        </div>
 
-            <div class="field">
-                <label>FINALIDAD (NTS 213-2024)</label>
-                <select id="esquema" onchange="validarYCalcular()">
-                    <option value="">Seleccione...</option>
-                    <option value="2">🛡️ Preventivo (2mg/kg)</option>
-                    <option value="3">💊 Tratamiento (3mg/kg)</option>
-                </select>
-            </div>
-
-            <div class="field">
-                <label>PRESENTACIÓN</label>
-                <select id="tipoHierro" onchange="validarYCalcular()">
-                    <option value="">Seleccione Producto...</option>
-                    <option value="polimaltosado_g">Gotas Polimaltosado (50mg/ml)</option>
-                    <option value="sulfato_g">Gotas Sulfato Ferroso (25mg/ml)</option>
-                    <option value="sulfato_j">Jarabe Sulfato Ferroso (15mg/5ml)</option>
-                    <option value="polimaltosado_j">Jarabe Polimaltosado (50mg/5ml)</option>
-                    <option value="micronutrientes">Micronutrientes (Sachet)</option>
-                </select>
-            </div>
-            
-            <input type="hidden" id="meses" value="1">
-
-            <div id="result-card" class="result-area hidden">
-                <div class="res-box">
-                    <small>DOSIS DIARIA</small>
-                    <h2 id="resDosis">---</h2>
+        <div class="glass-card">
+            <div id="login-screen">
+                <h1 class="title">SISTEMA<span>HIERRO</span></h1>
+                <div class="input-box">
+                    <label>DNI PROFESIONAL</label>
+                    <input type="number" id="user-input" placeholder="Escribe tu DNI aquí">
                 </div>
-                <div class="res-box">
-                    <small>TOTAL A ENTREGAR</small>
-                    <h3 id="resFrascos">---</h3>
+                <button class="btn-primary" onclick="intentarLogin()">ENTRAR</button>
+                <button class="btn-link" onclick="mostrarRegistro()">¿No tienes cuenta? Regístrate</button>
+            </div>
+
+            <div id="app-container" class="hidden">
+                <div class="top-bar">
+                    <span id="prof-display">Bienvenido</span>
+                    <span class="count">Puntos: <b id="numConsultas">0</b></span>
                 </div>
-                <button class="btn-confirm" id="okBtn" onclick="registrarYReiniciar()">CONFIRMAR (OK)</button>
+
+                <div class="form-grid">
+                    <div class="input-box">
+                        <label>PESO (KG)</label>
+                        <input type="number" id="peso" step="0.1" placeholder="0.0" oninput="validarYCalcular()">
+                    </div>
+                    
+                    <div class="input-box">
+                        <label>FINALIDAD</label>
+                        <select id="esquema" onchange="validarYCalcular()">
+                            <option value="">Seleccione...</option>
+                            <option value="2">Preventivo (2mg)</option>
+                            <option value="3">Tratamiento (3mg)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-box full">
+                        <label>PRESENTACIÓN</label>
+                        <select id="tipoHierro" onchange="validarYCalcular()">
+                            <option value="">Seleccione Producto...</option>
+                            <option value="polimaltosado_g">Gotas Polimaltosado</option>
+                            <option value="sulfato_g">Gotas Sulfato Ferroso</option>
+                            <option value="sulfato_j">Jarabe Sulfato Ferroso</option>
+                            <option value="polimaltosado_j">Jarabe Polimaltosado</option>
+                            <option value="micronutrientes">Sachet (MN)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="result-card" class="result-box hidden">
+                    <div class="res-item">
+                        <small>DOSIS DIARIA</small>
+                        <h2 id="resDosis">---</h2>
+                    </div>
+                    <div class="res-item">
+                        <small>TOTAL A ENTREGAR</small>
+                        <h3 id="resFrascos">---</h3>
+                    </div>
+                    <button class="btn-confirm" id="okBtn" onclick="registrarYReiniciar()">CONFIRMAR ENVÍO (OK)</button>
+                </div>
+            </div>
+
+            <div id="register-screen" class="hidden">
+                <h2>Nuevo Registro</h2>
+                <input type="number" id="reg-dni" placeholder="DNI">
+                <input type="text" id="reg-nombre" placeholder="Nombre completo">
+                <input type="text" id="reg-eess" placeholder="EESS">
+                <button class="btn-primary" onclick="crearCuentaPropia()">REGISTRARME</button>
+                <button class="btn-link" onclick="mostrarLogin()">Volver</button>
             </div>
         </div>
-    </div>
-
-    <div id="admin-panel" class="glass-card hidden">
-        <div class="admin-header">
-            <h3>Panel de Control</h3>
-            <button onclick="cerrarAdmin()">✖</button>
-        </div>
-        <div id="lista-usuarios"></div>
     </div>
 
     <script src="script.js"></script>
