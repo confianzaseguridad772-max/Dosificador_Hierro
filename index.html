@@ -2,98 +2,101 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DOSIS HIERRO PRO v7 - 2026</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Base Hierro 2026 - V7</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="bg-peru" class="cyber-bg"></div>
+    <div id="bg-peru"></div>
     <div class="overlay"></div>
 
-    <div id="login-screen" class="main-card">
-        <header class="cyber-header">
-            <div class="logo-area">
-                <h1>DOSIFICADOR<span>-HIERRO</span></h1>
-                <p>Mg. Gustabo Ortiz</p>
-            </div>
-        </header>
-        <div class="app-content">
-            <div class="avatar-box">
-                <div class="nurse-avatar">
-                    <img src="https://cdn-icons-png.flaticon.com/512/3844/3844391.png" alt="Enfermera">
-                    <div class="peru-flag-mini"></div>
-                </div>
-                <p class="avatar-text">¡Hola! Ingresa tu DNI para comenzar.</p>
-            </div>
+    <div class="nurse-container">
+        <div class="nurse-avatar-live">
+            <img src="https://cdn-icons-png.flaticon.com/512/3844/3844391.png" alt="Enfermera" id="nurse-img">
+            <div class="flag-badge"></div>
+        </div>
+        <div class="nurse-bubble" id="nurse-msg">¡Hola! Ingresa tu DNI para comenzar.</div>
+    </div>
+
+    <div id="login-screen" class="glass-card">
+        <div class="header-minimal">
+            <h1>SISTEMA<span>HIERRO</span></h1>
+            <p>Versión Profesional 2026</p>
+        </div>
+        <div class="input-group">
+            <label>DNI PROFESIONAL</label>
+            <input type="number" id="user-input" placeholder="Ingrese DNI">
+        </div>
+        <button class="btn-main" onclick="intentarLogin()">INICIAR SESIÓN</button>
+        <button class="btn-text" onclick="mostrarRegistro()">Crear cuenta nueva</button>
+        <div class="admin-access" onclick="abrirAdmin()">⚙️</div>
+    </div>
+
+    <div id="register-screen" class="glass-card hidden">
+        <h2>Registro de Profesional</h2>
+        <div class="grid-form">
+            <input type="number" id="reg-dni" placeholder="DNI">
+            <input type="text" id="reg-nombre" placeholder="Nombre Completo">
+            <input type="text" id="reg-profesion" placeholder="Profesión">
+            <input type="number" id="reg-cel" placeholder="Celular">
+            <input type="text" id="reg-eess" placeholder="EESS">
+        </div>
+        <button class="btn-main" onclick="crearCuentaPropia()">FINALIZAR REGISTRO</button>
+        <button class="btn-text" onclick="mostrarLogin()">Volver al Login</button>
+    </div>
+
+    <div id="app-container" class="glass-card hidden">
+        <div class="user-info-bar">
+            <span id="prof-display">Bienvenido</span>
+            <span class="badge">Consultas: <span id="numConsultas">0</span></span>
+        </div>
+
+        <div class="calculator-body">
             <div class="field">
-                <label>DNI DEL PROFESIONAL</label>
-                <input type="number" id="user-input" placeholder="Ej: 45678912">
-            </div>
-            <button class="btn-cyber btn-calc" onclick="intentarLogin()">ENTRAR AL SISTEMA</button>
-            <div class="pay-notice">
-                <button class="btn-reg" onclick="mostrarRegistro()">¿No estás registrado?</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="app-container" class="main-card hidden">
-        <header class="cyber-header">
-            <div class="logo-area">
-                <h1>DOSIS<span>DIARIA</span></h1>
-                <p id="profesional-name">Cargando...</p>
-            </div>
-            <div class="version-box">P: <span id="numConsultas">0</span></div>
-        </header>
-
-        <section class="app-content">
-            <div id="form-wrapper">
-                <div class="input-grid">
-                    <div class="field">
-                        <label>PESO (KG)</label>
-                        <input type="number" id="peso" placeholder="0.0" oninput="autoCalcular()">
-                    </div>
-                    <div class="field">
-                        <label>MESES</label>
-                        <input type="number" id="meses" value="1" oninput="autoCalcular()">
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label>FINALIDAD (NTS 213-2024)</label>
-                    <div class="cyber-options">
-                        <button class="option-btn" data-value="2" onclick="seleccionarOpcion('esquema', this)">🛡️ PREVENTIVO</button>
-                        <button class="option-btn" data-value="3" onclick="seleccionarOpcion('esquema', this)">💊 TRATAMIENTO</button>
-                    </div>
-                    <input type="hidden" id="esquema">
-                </div>
-
-                <div class="field">
-                    <label>PRESENTACIÓN</label>
-                    <div class="cyber-options grid-options">
-                        <button class="option-btn" data-value="polimaltosado_g" onclick="seleccionarOpcion('tipoHierro', this)">Gts Polimaltosa</button>
-                        <button class="option-btn" data-value="sulfato_g" onclick="seleccionarOpcion('tipoHierro', this)">Gts Sulfato</button>
-                        <button class="option-btn" data-value="sulfato_j" onclick="seleccionarOpcion('tipoHierro', this)">Jrb Sulfato</button>
-                        <button class="option-btn" data-value="polimaltosado_j" onclick="seleccionarOpcion('tipoHierro', this)">Jrb Polimaltosa</button>
-                        <button class="option-btn full-width" data-value="micronutrientes" onclick="seleccionarOpcion('tipoHierro', this)">Sachet (MN)</button>
-                    </div>
-                    <input type="hidden" id="tipoHierro">
-                </div>
+                <label>Peso del Paciente (Kg)</label>
+                <input type="number" id="peso" step="0.1" oninput="validarYCalcular()">
             </div>
 
-            <div id="result-card" class="result-view hidden">
-                <div class="data-screen">
-                    <span class="data-label">DOSIS SUGERIDA</span>
+            <div class="field">
+                <label>Esquema (NTS 213-2024)</label>
+                <select id="esquema" onchange="validarYCalcular()">
+                    <option value="">Seleccione...</option>
+                    <option value="2">Preventivo (2mg)</option>
+                    <option value="3">Tratamiento (3mg)</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>Presentación</label>
+                <select id="tipoHierro" onchange="actualizarImagenYCalcular()">
+                    <option value="">Seleccione Producto...</option>
+                    <option value="polimaltosado_g">Gotas Polimaltosado</option>
+                    <option value="sulfato_g">Gotas Sulfato Ferroso</option>
+                    <option value="sulfato_j">Jarabe Sulfato Ferroso</option>
+                    <option value="polimaltosado_j">Jarabe Polimaltosado</option>
+                    <option value="micronutrientes">Micronutrientes (Sachet)</option>
+                </select>
+            </div>
+            
+            <input type="hidden" id="meses" value="1"> <div id="result-card" class="result-area hidden">
+                <div class="res-box">
+                    <small>DOSIS DIARIA</small>
                     <h2 id="resDosis">---</h2>
-                    <p id="resFrascos">Calculando...</p>
                 </div>
-                <button id="okBtn" class="btn-cyber btn-calc" onclick="registrarYReiniciar()">CONFIRMAR (OK)</button>
+                <div class="res-box">
+                    <small>CANTIDAD A ENTREGAR</small>
+                    <h3 id="resFrascos">---</h3>
+                </div>
+                <button class="btn-confirm" id="okBtn" onclick="registrarYReiniciar()">CONFIRMAR (OK)</button>
             </div>
-        </section>
+        </div>
     </div>
 
-    <div id="register-screen" class="main-card hidden">
-        </div>
+    <div id="admin-panel" class="glass-card hidden">
+        <button onclick="cerrarAdmin()">✖ Cerrar</button>
+        <div id="lista-usuarios"></div>
+    </div>
 
     <script src="script.js"></script>
 </body>
