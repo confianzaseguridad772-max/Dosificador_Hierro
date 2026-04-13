@@ -1,176 +1,38 @@
 :root { 
+    --enfermeria-turquesa: #00ced1;
     --neon-cyan: #00f2fe; 
-    --neon-purple: #7000ff; 
-    --dark-bg: #0a0b10; 
+    --dark-bg: #0a0b10;
+    --peru-red: #d91e18;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
 
-body { 
-    height: 100vh; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    background: var(--dark-bg); 
-    overflow: hidden; 
-    color: white; 
+body { height: 100vh; display: flex; justify-content: center; align-items: center; background: var(--dark-bg); overflow: hidden; color: white; }
+
+.cyber-bg { position: absolute; width: 100%; height: 100%; z-index: 1; background-size: cover !important; }
+
+.overlay { position: absolute; width: 100%; height: 100%; background: rgba(10,16,25,0.8); z-index: 2; }
+
+.main-card { position: relative; z-index: 10; width: 380px; max-width: 95%; background: rgba(15, 20, 30, 0.95); border: 2px solid var(--enfermeria-turquesa); border-radius: 30px; box-shadow: 0 0 30px rgba(0, 206, 209, 0.3); }
+
+/* AVATAR DINÁMICO */
+.avatar-box { text-align: center; padding: 10px; }
+.nurse-avatar { position: relative; width: 80px; height: 80px; margin: 0 auto; border: 3px solid var(--enfermeria-turquesa); border-radius: 50%; background: white; padding: 5px; }
+.nurse-avatar img { width: 100%; }
+.peru-flag-mini { position: absolute; bottom: 0; right: 0; width: 25px; height: 15px; background: linear-gradient(90deg, red 33%, white 33%, white 66%, red 66%); border: 1px solid #ccc; border-radius: 2px; animation: flutter 2s infinite ease-in-out; }
+
+@keyframes flutter {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1) rotate(5deg); }
 }
 
-.cyber-bg { 
-    position: absolute; 
-    width: 100%; 
-    height: 100%; 
-    z-index: 1; 
-    background-size: cover !important; 
-    background-position: center !important;
-}
+.avatar-text { font-size: 0.8rem; color: var(--enfermeria-turquesa); margin-top: 10px; font-weight: 600; }
 
-.overlay { 
-    position: absolute; 
-    width: 100%; 
-    height: 100%; 
-    background: rgba(10,16,25,0.85); 
-    z-index: 2; 
-}
+.btn-cyber { background: var(--enfermeria-turquesa); color: #000; cursor: pointer; border: none; padding: 15px; border-radius: 15px; font-weight: 900; width: 100%; transition: 0.3s; }
+.btn-cyber:hover { transform: scale(1.02); box-shadow: 0 0 15px var(--enfermeria-turquesa); }
 
-.main-card { 
-    position: relative; 
-    z-index: 10; 
-    width: 380px; 
-    max-width: 95%; 
-    background: rgba(15, 20, 30, 0.95); 
-    border: 1px solid var(--neon-cyan); 
-    border-radius: 30px; 
-    box-shadow: 0 0 30px rgba(0, 242, 254, 0.2); 
-    display: flex; 
-    flex-direction: column; 
-}
+.option-btn.selected { border-color: var(--enfermeria-turquesa); color: white; background: rgba(0, 206, 209, 0.2); }
 
-.cyber-header { 
-    padding: 20px; 
-    border-bottom: 1px solid rgba(0,242,254,0.1); 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-}
-
-.logo-area h1 { font-size: 1.1rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
-.logo-area span { color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); }
-.logo-area p { font-size: 0.6rem; color: #888; }
-
-.app-content { padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-
-.field label { font-size: 0.65rem; color: var(--neon-cyan); margin-bottom: 8px; display: block; font-weight: 600; }
-
-input { 
-    width: 100%; 
-    padding: 14px; 
-    background: rgba(255,255,255,0.05); 
-    border: 1px solid rgba(255,255,255,0.1); 
-    border-radius: 15px; 
-    color: white; 
-    font-size: 0.9rem;
-    outline: none; 
-}
-
-input:focus { border-color: var(--neon-cyan); background: rgba(0, 242, 254, 0.05); }
-
-/* --- AJUSTE PARA PESO Y MESES JUNTOS --- */
-.input-grid { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
-    gap: 12px; 
-}
-
-.cyber-options { display: flex; gap: 10px; }
-.grid-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.full-width { grid-column: span 2; }
-
-.option-btn { 
-    flex: 1;
-    padding: 12px; 
-    background: rgba(255,255,255,0.03); 
-    border: 1px solid rgba(255,255,255,0.1); 
-    border-radius: 15px; 
-    color: #888; 
-    font-size: 0.75rem; 
-    cursor: pointer; 
-    transition: 0.3s;
-}
-
-.option-btn.selected { 
-    border-color: var(--neon-cyan); 
-    color: white; 
-    background: rgba(0, 242, 254, 0.15); 
-    box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
-}
-
-.btn-cyber { 
-    width: 100%; 
-    padding: 18px; 
-    border-radius: 20px; 
-    border: none; 
-    font-weight: 900; 
-    letter-spacing: 1px;
-    transition: 0.3s;
-}
-
-.btn-calc { background: var(--neon-cyan); color: #000; cursor: pointer; }
-.btn-calc:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0, 242, 254, 0.4); }
-
-.btn-disabled { background: #1a1a1a; color: #444; cursor: not-allowed; }
-
-.btn-wa { 
-    display: block; 
-    background: #25d366; 
-    color: white; 
-    text-decoration: none; 
-    padding: 12px; 
-    border-radius: 15px; 
-    text-align: center; 
-    font-size: 0.8rem; 
-}
-
-.result-view { 
-    padding: 20px; 
-    border-radius: 25px; 
-    background: rgba(0,0,0,0.3); 
-    border: 1px solid var(--neon-cyan); 
-    text-align: center; 
-}
-
-.image-scanner { 
-    width: 100px; 
-    height: 100px; 
-    margin: 0 auto 15px; 
-    background: white; 
-    border-radius: 20px; 
-    padding: 10px; 
-    position: relative; 
-    overflow: hidden;
-}
-
-.image-scanner img { width: 100%; height: 100%; object-fit: contain; }
-
-.scan-line {
-    position: absolute;
-    width: 100%;
-    height: 2px;
-    background: var(--neon-cyan);
-    top: 0;
-    left: 0;
-    animation: scan 2s linear infinite;
-}
-
-@keyframes scan {
-    0% { top: 0; }
-    100% { top: 100%; }
-}
+.result-view { margin-top: 15px; border: 1px dashed var(--enfermeria-turquesa); padding: 15px; border-radius: 20px; background: rgba(0,0,0,0.4); }
 
 .hidden { display: none !important; }
-
-/* Ajuste responsivo extra */
-@media (max-width: 350px) {
-    .input-grid { gap: 8px; }
-    .field label { font-size: 0.55rem; }
-}
