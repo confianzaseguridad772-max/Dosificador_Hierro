@@ -1,122 +1,106 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbwMenRVJHIwZQAM8XG8sSoW0Vxsj-cldX_xEjHJvXJP0_FYk4yJYUTxLzrSR7Nmr6ZNXA/exec"; 
-const API_KV = "https://api.keyvalue.xyz/77e68224/puntosGustavo2026";
-let SESION = null;
-
-const paisajes = [
-    "https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=1200",
-    "https://images.unsplash.com/photo-1580619305218-8423a7ef79b4?q=80&w=1200"
-];
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby6T_7pe6dGue2CTFl9xQpE2q1AWrzXRCMq5EOGTjovwoqGIk7gRyYfTCZBMcNY5-9AyA/exec";
+const KV_URL = "https://api.keyvalue.xyz/77e68224/puntosGustavo2026";
+let USER_DATA = null;
 
 window.onload = () => {
-    document.getElementById("bg-peru").style.background = `url('${paisajes[Math.floor(Math.random()*paisajes.length)]}') center/cover`;
-    actualizarPuntos();
+    document.getElementById("bg-peru").style.background = "url('https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=1200') center/cover";
+    updatePuntos();
 };
 
 async function intentarLogin() {
-    const dni = document.getElementById("user-input").value.trim();
-    if (dni === "Omg20") {
-        SESION = { dni: "Admin", nombre: "Gustabo Ortiz", eess: "Sede Central" };
-        lanzarApp(); return;
-    }
+    const dni = document.getElementById("user-input").value;
+    if(dni === "Omg20") { USER_DATA = { dni: "999", nombre: "Gustabo Ortiz", eess: "Sede Central" }; startApp(); return; }
     try {
-        const res = await fetch(API_URL);
-        const db = await res.json();
-        const user = db.find(u => u.dni == dni);
-        if (user) { SESION = user; lanzarApp(); }
-        else { alert("DNI no autorizado."); }
-    } catch (e) { alert("Error de red."); }
+        const res = await fetch(SCRIPT_URL);
+        const users = await res.json();
+        const found = users.find(u => u.dni == dni);
+        if(found) { USER_DATA = found; startApp(); }
+        else { alert("DNI no registrado."); }
+    } catch(e) { alert("Error de conexión."); }
 }
 
-function lanzarApp() {
+function startApp() {
     document.getElementById("login-screen").classList.add("hidden");
     document.getElementById("app-container").classList.remove("hidden");
-    document.getElementById("prof-display").innerText = SESION.nombre;
-    document.getElementById("dni-display").innerText = SESION.dni;
+    document.getElementById("prof-display").innerText = USER_DATA.nombre;
+    document.getElementById("eess-display").innerText = USER_DATA.eess;
 }
 
 function validarYCalcular() {
-    const pInput = document.getElementById("peso");
-    let peso = parseFloat(pInput.value);
-    
-    // Función original: corrección automática de peso
-    if (peso > 100) { peso = peso / 1000; pInput.value = peso.toFixed(1); }
+    const pIn = document.getElementById("peso");
+    let peso = parseFloat(pIn.value);
+    if(peso > 100) { peso = peso / 1000; pIn.value = peso.toFixed(1); }
 
-    const esquema = document.getElementById("esquema").value;
+    const esc = document.getElementById("esquema").value;
     const tipo = document.getElementById("tipoHierro").value;
     const msg = document.getElementById("global-msg");
 
-    if (peso > 0 && esquema && tipo) {
+    if(peso > 0 && esc && tipo) {
         document.getElementById("result-card").classList.remove("hidden");
-        let mgDia = peso * parseFloat(esquema);
-        let dosis = ""; let frascos = 0;
+        let mgDia = peso * parseFloat(esc);
+        let dosis = ""; let f1 = 0;
 
-        // ALERTAS ORIGINALES GUSTABO
+        // Alertas Originales
         if (tipo.includes("_g") && peso >= 12) {
-            msg.innerHTML = "⚠️ <b style='color:red'>AVISO:</b> Sugiero usar JARABE por el peso.";
+            msg.innerHTML = "⚠️ <b style='color:red'>AVISO:</b> Sugiero Jarabe por el peso.";
         } else if (tipo.includes("_j") && peso < 8) {
-            msg.innerHTML = "⚠️ <b style='color:orange'>AVISO:</b> Sugiero usar GOTAS por el peso.";
+            msg.innerHTML = "⚠️ <b style='color:orange'>AVISO:</b> Sugiero Gotas por el peso.";
         } else {
-            msg.innerText = "Cálculo optimizado según NTS 213-2024.";
+            msg.innerText = "Dosis calculada según NTS 213-2024.";
         }
 
-        // ALGORITMO ORIGINAL
         switch(tipo) {
-            case "polimaltosado_g": 
-                dosis = Math.round(mgDia / 2.5) + " gotas"; 
-                frascos = Math.ceil(((mgDia / 50) * 30) / 30); break;
-            case "sulfato_g": 
-                dosis = Math.round(mgDia / 1.25) + " gotas"; 
-                frascos = Math.ceil(((mgDia / 25) * 30) / 30); break;
-            case "sulfato_j": 
-                dosis = (mgDia / 3).toFixed(1) + " ml"; 
-                frascos = Math.ceil(((mgDia / 3) * 30) / 180); break;
-            case "polimaltosado_j": 
-                dosis = (mgDia / 10).toFixed(1) + " ml"; 
-                frascos = Math.ceil(((mgDia / 10) * 30) / 100); break;
-            case "micronutrientes": 
-                dosis = "1 SOBRE"; frascos = 30; break;
+            case "polimaltosado_g": dosis = Math.round(mgDia / 2.5) + " gotas"; f1 = Math.ceil((mgDia * 30 / 50) / 30); break;
+            case "sulfato_g": dosis = Math.round(mgDia / 1.25) + " gotas"; f1 = Math.ceil((mgDia * 30 / 25) / 30); break;
+            case "sulfato_j": dosis = (mgDia / 3).toFixed(1) + " ml"; f1 = Math.ceil((mgDia * 30 / 3) / 180); break;
+            case "polimaltosado_j": dosis = (mgDia / 10).toFixed(1) + " ml"; f1 = Math.ceil((mgDia * 30 / 10) / 100); break;
+            case "micronutrientes": dosis = "1 SOBRE"; f1 = 1; break;
         }
+
         document.getElementById("resDosis").innerText = dosis;
-        document.getElementById("resFrascos").innerText = frascos + " Unid.";
-    } else {
-        document.getElementById("result-card").classList.add("hidden");
+        const etiqueta = (tipo == "micronutrientes") ? " caj" : " fr";
+        document.getElementById("m1").innerText = f1 + etiqueta;
+        document.getElementById("m2").innerText = (f1 * 2) + etiqueta;
+        document.getElementById("m3").innerText = (f1 * 3) + etiqueta;
     }
 }
 
 async function registrarYReiniciar() {
-    const okBtn = document.getElementById("okBtn");
-    okBtn.innerText = "ENVIANDO...";
-    okBtn.disabled = true;
-
-    const info = {
+    const btn = document.getElementById("okBtn");
+    btn.innerText = "GUARDANDO...";
+    
+    const payload = {
         action: "registro_consulta",
-        userDni: SESION.dni,
-        userName: SESION.nombre,
-        userEess: SESION.eess,
-        pesoPaciente: document.getElementById("peso").value,
-        esquema: document.getElementById("esquema").value == "2" ? "Prev" : "Trat",
-        tipoHierro: document.getElementById("tipoHierro").value,
+        userDni: USER_DATA.dni,
+        userName: USER_DATA.nombre,
+        userEess: USER_DATA.eess,
+        peso: document.getElementById("peso").value,
+        esquema: document.getElementById("esquema").value,
+        hierro: document.getElementById("tipoHierro").value,
         dosis: document.getElementById("resDosis").innerText,
-        frascos: document.getElementById("resFrascos").innerText
+        total: document.getElementById("m1").innerText
     };
 
-    try {
-        await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(info) });
-        const rCount = await fetch(API_KV);
-        const val = parseInt(await rCount.text()) || 0;
-        await fetch(API_KV + "/" + (val + 1), { method: 'POST' });
-        
-        alert("¡Registro guardado!");
-        location.reload();
-    } catch (e) { alert("Error al registrar."); okBtn.disabled = false; }
+    fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
+    .then(() => fetch(KV_URL).then(r => r.text()).then(t => fetch(`${KV_URL}/${parseInt(t)+1}`,{method:'POST'})))
+    .then(() => { alert("Guardado!"); location.reload(); });
 }
 
-async function actualizarPuntos() {
-    try {
-        const r = await fetch(API_KV);
-        document.getElementById("numConsultas").innerText = await r.text() || 0;
-    } catch (e) {}
+async function crearCuentaPropia() {
+    const payload = {
+        action: "crear",
+        dni: document.getElementById("reg-dni").value,
+        nombre: document.getElementById("reg-nombre").value,
+        prof: document.getElementById("reg-profesion").value,
+        cel: document.getElementById("reg-cel").value,
+        eess: document.getElementById("reg-eess").value
+    };
+    if(!payload.dni) return alert("DNI Obligatorio");
+
+    fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
+    .then(() => { alert("Registro Enviado!"); location.reload(); });
 }
 
+async function updatePuntos() { const r = await fetch(KV_URL); const t = await r.text(); document.getElementById("numConsultas").innerText = t || 0; }
 function mostrarRegistro() { document.getElementById("login-screen").classList.add("hidden"); document.getElementById("register-screen").classList.remove("hidden"); }
 function mostrarLogin() { document.getElementById("register-screen").classList.add("hidden"); document.getElementById("login-screen").classList.remove("hidden"); }
