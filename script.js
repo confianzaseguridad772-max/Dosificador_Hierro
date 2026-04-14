@@ -110,11 +110,11 @@ async function registrarYReiniciar() {
             await fetch(KV_URL + "/" + (val + 1), { method: 'POST' });
         } catch(e) {}
 
-        alert("✅ Registro guardado con éxito.");
+        alert("✅ Felicitaciones");
     } catch (e) {
         alert("⚠️ Registro enviado (Verificar conexión).");
     } finally {
-        btn.innerText = "💾 CONFIRMAR Y GUARDAR (OK)";
+        btn.innerText = "NUEVA CONSULTA";
         btn.disabled = false;
         document.getElementById("peso").value = "";
         document.getElementById("result-card").classList.add("hidden");
@@ -141,7 +141,7 @@ async function crearCuentaPropia() {
 
     try {
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-        alert("✅ Cuenta solicitada. Ya puede intentar iniciar sesión.");
+        alert("✅ Ya puede intentar iniciar sesión, con su N° DNI.");
         mostrarLogin();
     } catch(e) {
         alert("Error al enviar registro.");
