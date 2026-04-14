@@ -16,40 +16,39 @@
             <header class="main-header">
                 <div class="icon-top">🏥</div>
                 <h1>SISTEMA<span>HIERRO</span></h1>
-                <p>Gestión Clínica Profesional 2026</p>
+                <p>Versión Profesional 2026</p>
             </header>
             <div class="input-group">
                 <label>DNI DEL PROFESIONAL</label>
                 <input type="number" id="user-input" placeholder="Ingrese DNI">
             </div>
-            <button class="btn-main" onclick="intentarLogin()">ENTRAR AL SISTEMA</button>
-            <button class="btn-text" onclick="mostrarRegistro()">¿No tienes cuenta? Regístrate</button>
-            <a href="https://wa.me/51956113989" target="_blank" class="ws-link">📲 Soporte Técnico (Gustabo Ortiz)</a>
+            <button class="btn-main" onclick="intentarLogin()">INICIAR SESIÓN</button>
+            <button class="btn-text" onclick="mostrarRegistro()">Crear cuenta nueva</button>
+            <a href="https://wa.me/51956113989" target="_blank" class="ws-link">📲 Soporte Técnico</a>
         </div>
 
         <div id="register-screen" class="glass-card hidden">
             <header class="main-header">
-                <div class="icon-top">🧬</div>
-                <h2>NUEVO REGISTRO</h2>
+                <h2>REGISTRO</h2>
             </header>
             <div class="grid-form">
-                <input type="number" id="reg-dni" placeholder="DNI (OBLIGATORIO)">
-                <input type="text" id="reg-nombre" placeholder="Nombre y Apellidos">
+                <input type="number" id="reg-dni" placeholder="DNI">
+                <input type="text" id="reg-nombre" placeholder="Nombres y Apellidos">
                 <input type="text" id="reg-profesion" placeholder="Profesión">
                 <input type="number" id="reg-cel" placeholder="Celular">
-                <input type="text" id="reg-region" placeholder="📍 Región">
-                <input type="text" id="reg-provincia" placeholder="📍 Provincia">
-                <input type="text" id="reg-distrito" placeholder="📍 Distrito">
-                <input type="text" id="reg-eess" placeholder="🏥 Establecimiento (EESS)">
+                <input type="text" id="reg-region" placeholder="Región">
+                <input type="text" id="reg-provincia" placeholder="Provincia">
+                <input type="text" id="reg-distrito" placeholder="Distrito">
+                <input type="text" id="reg-eess" placeholder="EESS (Establecimiento)">
             </div>
-            <button class="btn-main" id="btnReg" onclick="crearCuentaPropia()">🚀 FINALIZAR REGISTRO</button>
-            <button class="btn-text" onclick="mostrarLogin()">Volver al Inicio</button>
+            <button class="btn-main" id="btnReg" onclick="crearCuentaPropia()">FINALIZAR REGISTRO</button>
+            <button class="btn-text" onclick="mostrarLogin()">Volver</button>
         </div>
 
         <div id="app-container" class="glass-card hidden">
             <header class="app-header">
                 <div class="user-info">
-                    <span>🩺 <span id="prof-display">Cargando...</span></span>
+                    <span>🩺 <span id="prof-display">Bienvenido</span></span>
                     <small id="eess-display">Establecimiento</small>
                 </div>
                 <div class="stats-badge">CONSULTAS: <b id="numConsultas">0</b></div>
