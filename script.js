@@ -141,7 +141,7 @@ async function crearCuentaPropia() {
 
     try {
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-        alert("✅ Ya puede intentar iniciar sesión, con su N° DNI.");
+        ("✅ Ya puede intentar iniciar sesión, con su N° DNI.");
         mostrarLogin();
     } catch(e) {
         alert("Error al enviar registro.");
