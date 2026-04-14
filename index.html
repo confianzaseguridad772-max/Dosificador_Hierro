@@ -19,17 +19,15 @@
             </header>
             <div class="input-group">
                 <label>DNI DEL PROFESIONAL</label>
-                <input type="number" id="user-input" placeholder="Ingrese DNI para ingresar">
+                <input type="number" id="user-input" placeholder="Ingrese DNI">
             </div>
             <button class="btn-main" onclick="intentarLogin()">ENTRAR AL SISTEMA</button>
             <button class="btn-text" onclick="mostrarRegistro()">¿No tienes cuenta? Regístrate</button>
-            <div class="admin-gear" onclick="abrirAdmin()">⚙️</div>
+            <a href="https://wa.me/51956113989" target="_blank" class="ws-link">📲 Contactar al Creador (Dudas)</a>
         </div>
 
         <div id="register-screen" class="glass-card hidden">
-            <header class="main-header">
-                <h2>REGISTRO</h2>
-            </header>
+            <header class="main-header"><h2>NUEVO REGISTRO</h2></header>
             <div class="grid-form">
                 <input type="number" id="reg-dni" placeholder="DNI">
                 <input type="text" id="reg-nombre" placeholder="Nombre y Apellidos">
@@ -38,39 +36,37 @@
                 <input type="text" id="reg-eess" placeholder="Establecimiento (EESS)">
             </div>
             <button class="btn-main" onclick="crearCuentaPropia()">FINALIZAR REGISTRO</button>
-            <button class="btn-text" onclick="mostrarLogin()">Volver</button>
+            <button class="btn-text" onclick="mostrarLogin()">Volver al Inicio</button>
         </div>
 
         <div id="app-container" class="glass-card hidden">
             <header class="app-header">
                 <div class="user-info">
                     <span id="prof-display">Bienvenido</span>
-                    <small>DNI: <span id="dni-display">0000</span></small>
+                    <small id="eess-display">EESS</small>
                 </div>
-                <div class="stats-badge">
-                    CONSULTAS: <b id="numConsultas">0</b>
-                </div>
+                <div class="stats-badge">CONSULTAS: <b id="numConsultas">0</b></div>
             </header>
 
             <div class="calc-body">
-                <div class="alert-box" id="global-msg">Listo para calcular dosis según NTS 213-2024.</div>
+                <div class="alert-box" id="global-msg">Complete los datos para calcular.</div>
 
                 <div class="field">
-                    <label>PESO DEL NIÑO (KG)</label>
+                    <label>PESO DEL PACIENTE (KG)</label>
                     <input type="number" id="peso" step="0.1" placeholder="0.0" oninput="validarYCalcular()">
                 </div>
 
                 <div class="field">
-                    <label>FINALIDAD DEL TRATAMIENTO</label>
+                    <label>FINALIDAD (NTS 213-2024)</label>
                     <select id="esquema" onchange="validarYCalcular()">
-                        <option value="">Seleccione Esquema...</option>
-                        <option value="2">🛡️ Preventivo (2mg/kg/día)</option>
-                        <option value="3">💊 Tratamiento (3mg/kg/día)</option>
+                        <option value="">Seleccione...</option>
+                        <option value="2">Preventivo (2mg/kg)</option>
+                        <option value="3">Tratamiento (3mg/kg)</option>
                     </select>
                 </div>
 
                 <div class="field">
-                    <label>PRESENTACIÓN FARMACÉUTICA</label>
+                    <label>PRESENTACIÓN DEL PRODUCTO</label>
                     <select id="tipoHierro" onchange="validarYCalcular()">
                         <option value="">Seleccione Producto...</option>
                         <option value="polimaltosado_g">Gotas Polimaltosado (50mg/ml)</option>
@@ -82,22 +78,22 @@
                 </div>
 
                 <div id="result-card" class="result-section hidden">
-                    <div class="res-grid">
-                        <div class="res-card">
-                            <small>DOSIS DIARIA</small>
-                            <h2 id="resDosis">---</h2>
-                        </div>
-                        <div class="res-card">
-                            <small>ENTREGAR</small>
-                            <h3 id="resFrascos">---</h3>
-                        </div>
+                    <div class="res-main">
+                        <small>DOSIS DIARIA RECOMENDADA</small>
+                        <h2 id="resDosis">---</h2>
                     </div>
+                    
+                    <div class="res-proyeccion">
+                        <div class="proy-item"><span>1 MES</span><b id="m1">-</b></div>
+                        <div class="proy-item"><span>2 MESES</span><b id="m2">-</b></div>
+                        <div class="proy-item"><span>3 MESES</span><b id="m3">-</b></div>
+                    </div>
+
                     <button id="okBtn" class="btn-confirm" onclick="registrarYReiniciar()">CONFIRMAR Y GUARDAR (OK)</button>
                 </div>
             </div>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
