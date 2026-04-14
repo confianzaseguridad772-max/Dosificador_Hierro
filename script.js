@@ -1,4 +1,4 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbziOE8wPNvpR0fL4w6-OOWtjRHJz5O5oH1LPYo3YbNMBg6hL-kIrYmekqiHfdv5fxnaNw/exec"; // REPLAZA CON TU ENLACE
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxprAOnhlcpo44O2YZglBQTR6zbHiDjYLyaxkPfD1V1ahjb40kU3Tmw8wnq51AREPRtBw/exec"; 
 const KV_URL = "https://api.keyvalue.xyz/77e68224/puntosGustavo2026";
 let USER_DATA = null;
 
@@ -9,14 +9,14 @@ window.onload = () => {
 
 async function intentarLogin() {
     const dni = document.getElementById("user-input").value;
-    if(dni === "Omg20") { USER_DATA = { dni: "999", nombre: "Gustabo Ortiz", eess: "Sede Central" }; startApp(); return; }
+    if(dni === "Omg20") { USER_DATA = { dni: "999", nombre: "Gustabo Ortiz", cel: "956113989", eess: "Sede Central" }; startApp(); return; }
     try {
         const res = await fetch(SCRIPT_URL);
         const users = await res.json();
         const found = users.find(u => u.dni == dni);
         if(found) { USER_DATA = found; startApp(); }
         else { alert("DNI no registrado."); }
-    } catch(e) { alert("Error de conexión."); }
+    } catch(e) { alert("Error de conexión al servidor."); }
 }
 
 function startApp() {
@@ -45,7 +45,7 @@ function validarYCalcular() {
         } else if (tipo.includes("_j") && peso < 8) {
             msg.innerHTML = "⚠️ <b style='color:orange'>AVISO:</b> Sugiero Gotas por el peso.";
         } else {
-            msg.innerText = "Cálculo según NTS 213-2024.";
+            msg.innerText = "Cálculo optimizado según NTS 213-2024.";
         }
 
         switch(tipo) {
@@ -73,6 +73,7 @@ async function registrarYReiniciar() {
         action: "registro_consulta",
         userDni: USER_DATA.dni,
         userName: USER_DATA.nombre,
+        userCel: USER_DATA.cel || "",
         userEess: USER_DATA.eess,
         peso: document.getElementById("peso").value,
         esquema: document.getElementById("esquema").options[document.getElementById("esquema").selectedIndex].text,
@@ -84,21 +85,26 @@ async function registrarYReiniciar() {
     try {
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
         
-        const rCount = await fetch(KV_URL);
-        const val = parseInt(await rCount.text()) || 0;
-        await fetch(KV_URL + "/" + (val + 1), { method: 'POST' });
+        // Contador visual
+        try {
+            const rCount = await fetch(KV_URL);
+            const val = parseInt(await rCount.text()) || 0;
+            await fetch(KV_URL + "/" + (val + 1), { method: 'POST' });
+        } catch(e) {}
 
-        alert("✅ ¡Datos migrados a la hoja Consultas!");
-        
+        alert("✅ Registro guardado. El sistema se limpiará para el próximo paciente.");
+    } catch (e) {
+        alert("⚠️ Error de conexión, pero el formulario se reiniciará.");
+    } finally {
+        // LIMPIEZA TOTAL TRAS DAR "ACEPTAR"
         btn.innerText = "💾 CONFIRMAR Y GUARDAR (OK)";
         btn.disabled = false;
         document.getElementById("peso").value = "";
+        document.getElementById("esquema").selectedIndex = 0;
+        document.getElementById("tipoHierro").selectedIndex = 0;
         document.getElementById("result-card").classList.add("hidden");
+        document.getElementById("global-msg").innerText = "Complete los datos para calcular.";
         updatePuntos();
-    } catch (e) {
-        alert("Error de red.");
-        btn.disabled = false;
-        btn.innerText = "💾 CONFIRMAR Y GUARDAR (OK)";
     }
 }
 
@@ -122,18 +128,18 @@ async function crearCuentaPropia() {
     if(!payload.dni || !payload.nombre) {
         alert("DNI y Nombre son obligatorios");
         btn.disabled = false;
-        btn.innerText = "🚀 FINALIZAR REGISTRO";
+        btn.innerText = "FINALIZAR REGISTRO";
         return;
     }
 
     try {
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-        alert("✅ Usuario enviado a la hoja Usuarios.");
+        alert("✅ Registro de usuario enviado.");
         location.reload();
     } catch(e) { 
-        alert("Error al enviar."); 
+        alert("Error al registrar usuario."); 
         btn.disabled = false;
-        btn.innerText = "🚀 FINALIZAR REGISTRO"; 
+        btn.innerText = "FINALIZAR REGISTRO"; 
     }
 }
 
