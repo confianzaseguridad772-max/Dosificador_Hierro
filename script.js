@@ -1,4 +1,4 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzgUu7qL478M81j-h4WGTpi7kfcxY-RDf7HXImMk5WOLrpvuQUkUTPzAZtJCdWObZwzhA/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbziOE8wPNvpR0fL4w6-OOWtjRHJz5O5oH1LPYo3YbNMBg6hL-kIrYmekqiHfdv5fxnaNw/exec"; // REPLAZA CON TU ENLACE
 const KV_URL = "https://api.keyvalue.xyz/77e68224/puntosGustavo2026";
 let USER_DATA = null;
 
@@ -45,7 +45,7 @@ function validarYCalcular() {
         } else if (tipo.includes("_j") && peso < 8) {
             msg.innerHTML = "⚠️ <b style='color:orange'>AVISO:</b> Sugiero Gotas por el peso.";
         } else {
-            msg.innerText = "Cálculo optimizado (NTS 213-2024).";
+            msg.innerText = "Cálculo según NTS 213-2024.";
         }
 
         switch(tipo) {
@@ -75,8 +75,8 @@ async function registrarYReiniciar() {
         userName: USER_DATA.nombre,
         userEess: USER_DATA.eess,
         peso: document.getElementById("peso").value,
-        esquema: document.getElementById("esquema").value,
-        hierro: document.getElementById("tipoHierro").value,
+        esquema: document.getElementById("esquema").options[document.getElementById("esquema").selectedIndex].text,
+        hierro: document.getElementById("tipoHierro").options[document.getElementById("tipoHierro").selectedIndex].text,
         dosis: document.getElementById("resDosis").innerText,
         total: document.getElementById("m1").innerText
     };
@@ -84,20 +84,19 @@ async function registrarYReiniciar() {
     try {
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
         
-        // Sumar punto
         const rCount = await fetch(KV_URL);
         const val = parseInt(await rCount.text()) || 0;
         await fetch(KV_URL + "/" + (val + 1), { method: 'POST' });
 
-        alert("¡Registro Exitoso!");
-        // Reset de campos y botón
+        alert("✅ ¡Datos migrados a la hoja Consultas!");
+        
         btn.innerText = "💾 CONFIRMAR Y GUARDAR (OK)";
         btn.disabled = false;
         document.getElementById("peso").value = "";
         document.getElementById("result-card").classList.add("hidden");
         updatePuntos();
     } catch (e) {
-        alert("Error al guardar.");
+        alert("Error de red.");
         btn.disabled = false;
         btn.innerText = "💾 CONFIRMAR Y GUARDAR (OK)";
     }
@@ -105,26 +104,37 @@ async function registrarYReiniciar() {
 
 async function crearCuentaPropia() {
     const btn = document.getElementById("btnReg");
-    btn.innerText = "ENVIANDO...";
+    btn.innerText = "🚀 ENVIANDO...";
+    btn.disabled = true;
+
     const payload = {
         action: "crear",
         dni: document.getElementById("reg-dni").value,
         nombre: document.getElementById("reg-nombre").value,
         prof: document.getElementById("reg-profesion").value,
         cel: document.getElementById("reg-cel").value,
-        eess: document.getElementById("reg-eess").value,
         region: document.getElementById("reg-region").value,
         provincia: document.getElementById("reg-provincia").value,
-        distrito: document.getElementById("reg-distrito").value
+        distrito: document.getElementById("reg-distrito").value,
+        eess: document.getElementById("reg-eess").value
     };
     
-    if(!payload.dni) return alert("DNI Obligatorio");
+    if(!payload.dni || !payload.nombre) {
+        alert("DNI y Nombre son obligatorios");
+        btn.disabled = false;
+        btn.innerText = "🚀 FINALIZAR REGISTRO";
+        return;
+    }
 
     try {
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-        alert("Solicitud enviada.");
+        alert("✅ Usuario enviado a la hoja Usuarios.");
         location.reload();
-    } catch(e) { alert("Error."); btn.innerText = "FINALIZAR REGISTRO"; }
+    } catch(e) { 
+        alert("Error al enviar."); 
+        btn.disabled = false;
+        btn.innerText = "🚀 FINALIZAR REGISTRO"; 
+    }
 }
 
 async function updatePuntos() { const r = await fetch(KV_URL); const t = await r.text(); document.getElementById("numConsultas").innerText = t || 0; }
