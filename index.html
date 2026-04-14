@@ -14,6 +14,7 @@
     <div class="container">
         <div id="login-screen" class="glass-card">
             <header class="main-header">
+                <div class="icon-top">🏥</div>
                 <h1>SISTEMA<span>HIERRO</span></h1>
                 <p>Gestión Clínica Profesional 2026</p>
             </header>
@@ -23,27 +24,33 @@
             </div>
             <button class="btn-main" onclick="intentarLogin()">ENTRAR AL SISTEMA</button>
             <button class="btn-text" onclick="mostrarRegistro()">¿No tienes cuenta? Regístrate</button>
-            <a href="https://wa.me/51956113989" target="_blank" class="ws-link">📲 Contactar al Creador (Dudas)</a>
+            <a href="https://wa.me/51956113989" target="_blank" class="ws-link">📲 Soporte Técnico (Gustabo Ortiz)</a>
         </div>
 
         <div id="register-screen" class="glass-card hidden">
-            <header class="main-header"><h2>NUEVO REGISTRO</h2></header>
+            <header class="main-header">
+                <div class="icon-top">🧬</div>
+                <h2>NUEVO REGISTRO</h2>
+            </header>
             <div class="grid-form">
-                <input type="number" id="reg-dni" placeholder="DNI">
+                <input type="number" id="reg-dni" placeholder="DNI (Obligatorio)">
                 <input type="text" id="reg-nombre" placeholder="Nombre y Apellidos">
                 <input type="text" id="reg-profesion" placeholder="Profesión">
                 <input type="number" id="reg-cel" placeholder="Celular">
                 <input type="text" id="reg-eess" placeholder="Establecimiento (EESS)">
+                <input type="text" id="reg-region" placeholder="Región">
+                <input type="text" id="reg-provincia" placeholder="Provincia">
+                <input type="text" id="reg-distrito" placeholder="Distrito">
             </div>
-            <button class="btn-main" onclick="crearCuentaPropia()">FINALIZAR REGISTRO</button>
+            <button class="btn-main" id="btnReg" onclick="crearCuentaPropia()">FINALIZAR REGISTRO</button>
             <button class="btn-text" onclick="mostrarLogin()">Volver al Inicio</button>
         </div>
 
         <div id="app-container" class="glass-card hidden">
             <header class="app-header">
                 <div class="user-info">
-                    <span id="prof-display">Bienvenido</span>
-                    <small id="eess-display">EESS</small>
+                    <span>🩺 <span id="prof-display">Bienvenido</span></span>
+                    <small id="eess-display">Establecimiento</small>
                 </div>
                 <div class="stats-badge">CONSULTAS: <b id="numConsultas">0</b></div>
             </header>
@@ -52,12 +59,12 @@
                 <div class="alert-box" id="global-msg">Complete los datos para calcular.</div>
 
                 <div class="field">
-                    <label>PESO DEL PACIENTE (KG)</label>
+                    <label>⚖️ PESO DEL PACIENTE (KG)</label>
                     <input type="number" id="peso" step="0.1" placeholder="0.0" oninput="validarYCalcular()">
                 </div>
 
                 <div class="field">
-                    <label>FINALIDAD (NTS 213-2024)</label>
+                    <label>📋 FINALIDAD (NTS 213-2024)</label>
                     <select id="esquema" onchange="validarYCalcular()">
                         <option value="">Seleccione...</option>
                         <option value="2">Preventivo (2mg/kg)</option>
@@ -66,7 +73,7 @@
                 </div>
 
                 <div class="field">
-                    <label>PRESENTACIÓN DEL PRODUCTO</label>
+                    <label>💊 PRESENTACIÓN</label>
                     <select id="tipoHierro" onchange="validarYCalcular()">
                         <option value="">Seleccione Producto...</option>
                         <option value="polimaltosado_g">Gotas Polimaltosado (50mg/ml)</option>
@@ -79,17 +86,17 @@
 
                 <div id="result-card" class="result-section hidden">
                     <div class="res-main">
-                        <small>DOSIS DIARIA RECOMENDADA</small>
+                        <small>DOSIS DIARIA</small>
                         <h2 id="resDosis">---</h2>
                     </div>
                     
                     <div class="res-proyeccion">
-                        <div class="proy-item"><span>1 MES</span><b id="m1">-</b></div>
-                        <div class="proy-item"><span>2 MESES</span><b id="m2">-</b></div>
-                        <div class="proy-item"><span>3 MESES</span><b id="m3">-</b></div>
+                        <div class="proy-item"><span>📦 1 MES</span><b id="m1">-</b></div>
+                        <div class="proy-item"><span>📦 2 MESES</span><b id="m2">-</b></div>
+                        <div class="proy-item"><span>📦 3 MESES</span><b id="m3">-</b></div>
                     </div>
 
-                    <button id="okBtn" class="btn-confirm" onclick="registrarYReiniciar()">CONFIRMAR Y GUARDAR (OK)</button>
+                    <button id="okBtn" class="btn-confirm" onclick="registrarYReiniciar()">💾 CONFIRMAR Y GUARDAR (OK)</button>
                 </div>
             </div>
         </div>
