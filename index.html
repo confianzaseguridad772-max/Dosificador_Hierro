@@ -14,89 +14,83 @@
     <div class="container">
         <div id="login-screen" class="glass-card">
             <header class="main-header">
-                <div class="icon-top">🏥</div>
+                <div style="font-size: 40px; margin-bottom: 10px;">🏥</div>
                 <h1>SISTEMA<span>HIERRO</span></h1>
                 <p>Versión Profesional 2026</p>
             </header>
-            <div class="input-group">
-                <label>DNI DEL PROFESIONAL</label>
-                <input type="number" id="user-input" placeholder="Ingrese DNI">
+            <div style="margin-top: 25px; text-align: left;">
+                <label style="font-size: 11px; font-weight: 800; color: #00a8ad;">DNI DEL PROFESIONAL</label>
+                <input type="number" id="user-input" placeholder="Ingrese su DNI">
             </div>
             <button class="btn-main" onclick="intentarLogin()">INICIAR SESIÓN</button>
-            <button class="btn-text" onclick="mostrarRegistro()">Crear cuenta nueva</button>
-            <a href="https://wa.me/51956113989" target="_blank" class="ws-link">📲 Soporte Técnico</a>
+            <button class="btn-text" onclick="mostrarRegistro()">¿No tienes cuenta? Regístrate</button>
+            <a href="https://wa.me/51956113989" target="_blank" style="display: block; margin-top: 20px; color: #25D366; text-decoration: none; font-size: 12px; font-weight: 700;">📲 Soporte Técnico</a>
         </div>
 
         <div id="register-screen" class="glass-card hidden">
-            <header class="main-header">
-                <h2>REGISTRO</h2>
-            </header>
+            <h2>NUEVO REGISTRO</h2>
             <div class="grid-form">
-                <input type="number" id="reg-dni" placeholder="DNI">
-                <input type="text" id="reg-nombre" placeholder="Nombres y Apellidos">
-                <input type="text" id="reg-profesion" placeholder="Profesión">
-                <input type="number" id="reg-cel" placeholder="Celular">
+                <input type="number" id="reg-dni" placeholder="Número de DNI">
+                <input type="text" id="reg-nombre" placeholder="Nombre Completo">
+                <input type="text" id="reg-profesion" placeholder="Profesión / Cargo">
+                <input type="number" id="reg-cel" placeholder="Celular de contacto">
                 <input type="text" id="reg-region" placeholder="Región">
                 <input type="text" id="reg-provincia" placeholder="Provincia">
                 <input type="text" id="reg-distrito" placeholder="Distrito">
-                <input type="text" id="reg-eess" placeholder="EESS (Establecimiento)">
+                <input type="text" id="reg-eess" placeholder="Nombre de EESS">
             </div>
             <button class="btn-main" id="btnReg" onclick="crearCuentaPropia()">FINALIZAR REGISTRO</button>
-            <button class="btn-text" onclick="mostrarLogin()">Volver</button>
+            <button class="btn-text" onclick="mostrarLogin()">Volver al Inicio</button>
         </div>
 
         <div id="app-container" class="glass-card hidden">
             <header class="app-header">
-                <div class="user-info">
-                    <span>🩺 <span id="prof-display">Bienvenido</span></span>
-                    <small id="eess-display">Establecimiento</small>
+                <div style="text-align: left;">
+                    <span style="font-weight: 900; color: #333;">🩺 <span id="prof-display">Cargando...</span></span><br>
+                    <small id="eess-display" style="color: #888;"></small>
                 </div>
                 <div class="stats-badge">CONSULTAS: <b id="numConsultas">0</b></div>
             </header>
 
-            <div class="calc-body">
-                <div class="alert-box" id="global-msg">Complete los datos para calcular.</div>
+            <div class="alert-box" id="global-msg" style="background: #e0fbfc; padding: 10px; border-radius: 10px; font-size: 12px; margin-bottom: 15px;">Complete los datos.</div>
 
-                <div class="field">
-                    <label>⚖️ PESO DEL PACIENTE (KG)</label>
-                    <input type="number" id="peso" step="0.1" placeholder="0.0" oninput="validarYCalcular()">
+            <div style="text-align: left; margin-top: 15px;">
+                <label style="font-size: 11px; font-weight: 800; color: #00a8ad;">⚖️ PESO DEL PACIENTE (KG)</label>
+                <input type="number" id="peso" step="0.1" placeholder="Ej: 8.5" oninput="validarYCalcular()">
+            </div>
+
+            <div style="text-align: left; margin-top: 15px;">
+                <label style="font-size: 11px; font-weight: 800; color: #00a8ad;">📋 FINALIDAD</label>
+                <select id="esquema" onchange="validarYCalcular()">
+                    <option value="">Seleccione...</option>
+                    <option value="2">Preventivo (2mg/kg)</option>
+                    <option value="3">Tratamiento (3mg/kg)</option>
+                </select>
+            </div>
+
+            <div style="text-align: left; margin-top: 15px;">
+                <label style="font-size: 11px; font-weight: 800; color: #00a8ad;">💊 PRODUCTO</label>
+                <select id="tipoHierro" onchange="validarYCalcular()">
+                    <option value="">Seleccione...</option>
+                    <option value="polimaltosado_g">Gotas Polimaltosado</option>
+                    <option value="sulfato_g">Gotas Sulfato Ferroso</option>
+                    <option value="sulfato_j">Jarabe Sulfato Ferroso</option>
+                    <option value="polimaltosado_j">Jarabe Polimaltosado</option>
+                    <option value="micronutrientes">Micronutrientes</option>
+                </select>
+            </div>
+
+            <div id="result-card" class="result-section hidden">
+                <div class="res-main">
+                    <small style="font-weight: 800; color: #00a8ad;">DOSIS DIARIA</small>
+                    <h2 id="resDosis">---</h2>
                 </div>
-
-                <div class="field">
-                    <label>📋 FINALIDAD (NTS 213-2024)</label>
-                    <select id="esquema" onchange="validarYCalcular()">
-                        <option value="">Seleccione...</option>
-                        <option value="2">Preventivo (2mg/kg)</option>
-                        <option value="3">Tratamiento (3mg/kg)</option>
-                    </select>
+                <div style="background: #fff; border-radius: 15px; padding: 10px; margin-top: 10px;">
+                    <div class="proy-item"><span>1 MES</span><b id="m1">-</b></div>
+                    <div class="proy-item"><span>2 MESES</span><b id="m2">-</b></div>
+                    <div class="proy-item"><span>3 MESES</span><b id="m3">-</b></div>
                 </div>
-
-                <div class="field">
-                    <label>💊 PRESENTACIÓN</label>
-                    <select id="tipoHierro" onchange="validarYCalcular()">
-                        <option value="">Seleccione Producto...</option>
-                        <option value="polimaltosado_g">Gotas Polimaltosado (50mg/ml)</option>
-                        <option value="sulfato_g">Gotas Sulfato Ferroso (25mg/ml)</option>
-                        <option value="sulfato_j">Jarabe Sulfato Ferroso (15mg/5ml)</option>
-                        <option value="polimaltosado_j">Jarabe Polimaltosado (50mg/5ml)</option>
-                        <option value="micronutrientes">Micronutrientes (Sachet)</option>
-                    </select>
-                </div>
-
-                <div id="result-card" class="result-section hidden">
-                    <div class="res-main">
-                        <small>DOSIS DIARIA RECOMENDADA</small>
-                        <h2 id="resDosis">---</h2>
-                    </div>
-                    
-                    <div class="res-proyeccion">
-                        <div class="proy-item"><span>📦 1 MES</span><b id="m1">-</b></div>
-                        <div class="proy-item"><span>📦 2 MESES</span><b id="m2">-</b></div>
-                        <div class="proy-item"><span>📦 3 MESES</span><b id="m3">-</b></div>
-                    </div>
-
-                    <button id="okBtn" class="btn-confirm" onclick="registrarYReiniciar()">💾 CONFIRMAR Y GUARDAR (OK)</button>
-                </div>
+                <button id="okBtn" class="btn-confirm" onclick="registrarYReiniciar()">💾 GUARDAR CONSULTA</button>
             </div>
         </div>
     </div>
