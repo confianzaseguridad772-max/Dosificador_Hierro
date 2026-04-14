@@ -110,7 +110,7 @@ async function registrarYReiniciar() {
             await fetch(KV_URL + "/" + (val + 1), { method: 'POST' });
         } catch(e) {}
 
-        alert("✅ Felicitaciones");
+        ("✅ Felicitaciones");
     } catch (e) {
         alert("⚠️ Registro enviado (Verificar conexión).");
     } finally {
