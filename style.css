@@ -1,70 +1,157 @@
 :root {
-    --turquesa: #00ced1;
-    --turquesa-dark: #008b8b;
+    --turquesa: #00f2ff; /* Turquesa más vibrante */
+    --turquesa-dark: #00a8ad;
     --dark: #0f172a;
-    --glass: rgba(255, 255, 255, 0.95);
+    --glass: rgba(255, 255, 255, 0.85);
+    --neon-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Outfit', sans-serif; background: #000; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
-#bg-peru { position: fixed; width: 100%; height: 100%; z-index: -2; transition: 1s ease; }
-.overlay { position: fixed; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: -1; }
+body { 
+    font-family: 'Outfit', sans-serif; 
+    background: #000; 
+    height: 100vh; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    overflow: hidden; 
+}
 
-.container { width: 100%; display: flex; justify-content: center; padding: 20px; }
+/* Fondo con efecto de profundidad */
+#bg-peru { 
+    position: fixed; 
+    width: 100%; 
+    height: 100%; 
+    z-index: -2; 
+    transform: scale(1.1); /* Ligero zoom para evitar bordes blancos */
+    transition: transform 2s ease;
+}
+
+.overlay { 
+    position: fixed; 
+    width: 100%; 
+    height: 100%; 
+    background: radial-gradient(circle, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 100%); 
+    z-index: -1; 
+}
+
+.container { 
+    width: 100%; 
+    display: flex; 
+    justify-content: center; 
+    padding: 15px; 
+    perspective: 1000px; /* Efecto 3D para la tarjeta */
+}
 
 .glass-card {
     background: var(--glass);
-    width: 400px; max-width: 100%;
-    padding: 30px; border-radius: 25px;
-    border: 2px solid var(--turquesa);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    backdrop-filter: blur(15px); /* Efecto de desenfoque de fondo */
+    -webkit-backdrop-filter: blur(15px);
+    width: 100%;
+    max-width: 420px;
+    padding: 35px 25px; 
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.6), var(--neon-shadow);
     text-align: center;
     position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: cardEntrance 0.8s ease-out; /* Animación de entrada */
 }
 
-.main-header h1 { color: var(--turquesa-dark); font-weight: 900; font-size: 32px; letter-spacing: -1px; }
-.main-header span { color: #333; }
-.main-header p { font-size: 13px; color: #666; margin-top: 5px; }
+@keyframes cardEntrance {
+    from { opacity: 0; transform: translateY(30px) rotateX(-5deg); }
+    to { opacity: 1; transform: translateY(0) rotateX(0); }
+}
 
-.input-group, .field { margin-top: 20px; text-align: left; }
-label { font-size: 11px; font-weight: 800; color: var(--turquesa-dark); letter-spacing: 0.5px; }
+/* Cabeceras elegantes */
+.main-header h1 { 
+    color: var(--dark); 
+    font-weight: 900; 
+    font-size: 32px; 
+    letter-spacing: -1.5px;
+    background: linear-gradient(90deg, #008b8b, #00f2ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.main-header p { font-size: 12px; font-weight: 600; color: #64748b; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
+
+/* Inputs con estilo moderno */
+.field { margin-top: 20px; text-align: left; }
+label { font-size: 10px; font-weight: 800; color: var(--turquesa-dark); letter-spacing: 1px; text-transform: uppercase; margin-left: 5px; }
 
 input, select {
-    width: 100%; padding: 14px; margin-top: 6px;
-    border-radius: 12px; border: 1.5px solid #ddd;
-    font-size: 16px; outline: none; background: #fff;
+    width: 100%; padding: 14px; margin-top: 8px;
+    border-radius: 16px; border: 1px solid rgba(0,0,0,0.1);
+    font-size: 16px; outline: none; background: rgba(255,255,255,0.8);
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
 }
 
-input:focus { border-color: var(--turquesa); }
+input:focus, select:focus { 
+    border-color: var(--turquesa); 
+    background: #fff;
+    box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+    transform: translateY(-2px);
+}
 
+/* Botones con efecto Glow */
 .btn-main {
-    background: var(--turquesa); color: #000;
-    border: none; padding: 16px; width: 100%;
-    border-radius: 15px; font-weight: 900; font-size: 16px;
-    margin-top: 25px; cursor: pointer; transition: 0.2s;
+    background: linear-gradient(135deg, var(--turquesa) 0%, var(--turquesa-dark) 100%);
+    color: #fff;
+    border: none; padding: 18px; width: 100%;
+    border-radius: 18px; font-weight: 900; font-size: 16px;
+    margin-top: 25px; cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0, 206, 209, 0.3);
+    transition: 0.3s;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
-.btn-main:active { transform: scale(0.97); }
+.btn-main:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(0, 206, 209, 0.4); }
 
-.btn-text { background: none; border: none; color: #777; margin-top: 15px; text-decoration: underline; cursor: pointer; width: 100%; }
+.btn-confirm { 
+    background: #0f172a; color: #fff; 
+    border: 1px solid var(--turquesa); 
+    padding: 18px; width: 100%; border-radius: 18px; 
+    font-weight: 900; cursor: pointer; margin-top: 20px;
+    transition: 0.3s;
+}
 
-/* CALCULADORA */
-.app-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px; }
-.user-info { text-align: left; }
-.user-info span { font-weight: 900; color: #333; display: block; }
-.stats-badge { background: #000; color: var(--turquesa); padding: 5px 12px; border-radius: 10px; font-size: 11px; }
+.btn-confirm:hover { background: #1e293b; border-color: #fff; }
 
-.alert-box { background: #e0fbfc; color: #008080; padding: 10px; border-radius: 10px; font-size: 12px; font-weight: 600; text-align: center; }
+/* Dashboard Mini Header */
+.app-header { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.5); padding: 12px; border-radius: 20px; margin-bottom: 20px; }
+.stats-badge { background: #0f172a; color: var(--turquesa); padding: 8px 15px; border-radius: 14px; font-size: 10px; font-weight: 900; border: 1px solid var(--turquesa); }
 
-.result-section { margin-top: 20px; padding-top: 20px; border-top: 3px dashed var(--turquesa); }
-.res-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-.res-card { background: #f0fdfa; padding: 15px; border-radius: 15px; border: 1px solid #cffafe; }
-.res-card small { font-size: 10px; font-weight: 800; color: #008b8b; }
-.res-card h2 { color: #000; font-size: 22px; margin-top: 5px; }
-.res-card h3 { color: #008b8b; font-size: 14px; }
+/* Sección de Resultados Impresionante */
+.result-section { 
+    margin-top: 25px; padding-top: 25px; 
+    border-top: 2px solid rgba(0, 242, 255, 0.2); 
+    animation: fadeIn 0.5s ease;
+}
 
-.btn-confirm { background: #000; color: var(--turquesa); border: 2px solid var(--turquesa); padding: 15px; width: 100%; border-radius: 15px; font-weight: 900; cursor: pointer; }
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
-.hidden { display: none; }
-.admin-gear { position: absolute; bottom: 15px; right: 20px; opacity: 0.3; cursor: pointer; }
+.res-main { 
+    background: linear-gradient(180deg, #f0fdfa 0%, #ccfbf1 100%); 
+    padding: 20px; border-radius: 20px; border: 1px solid var(--turquesa);
+}
+
+.res-main h2 { font-size: 38px; color: #0f172a; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+
+.res-proyeccion { background: rgba(255,255,255,0.5); border-radius: 20px; padding: 15px; margin-top: 15px; }
+.proy-item { display: flex; justify-content: space-between; padding: 12px 10px; border-bottom: 1px solid rgba(0,0,0,0.05); }
+.proy-item:last-child { border-bottom: none; }
+.proy-item span { font-weight: 700; color: #64748b; font-size: 13px; }
+.proy-item b { color: #0f172a; font-size: 15px; }
+
+/* Grid de Registro Optimizado */
+.grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+#reg-dni, #reg-nombre { grid-column: span 2; }
+
+/* Scrollbar invisible pero funcional */
+.glass-card::-webkit-scrollbar { width: 4px; }
+.glass-card::-webkit-scrollbar-thumb { background: var(--turquesa); border-radius: 10px; }
