@@ -9,18 +9,33 @@ window.onload = () => {
 
 async function intentarLogin() {
     const dni = document.getElementById("user-input").value;
-    if(dni === "Omg20") { USER_DATA = { dni: "999", nombre: "Gustabo Ortiz", cel: "956113989", eess: "Sede Central" }; startApp(); return; }
+    if(!dni) return alert("Ingrese su DNI");
+    
+    // Modo Administrador
+    if(dni === "Omg20") { 
+        USER_DATA = { dni: "999", nombre: "GUSTABO ORTIZ", cel: "956113989", eess: "SEDE CENTRAL" }; 
+        startApp(); 
+        return; 
+    }
+
     try {
         const res = await fetch(SCRIPT_URL);
         const users = await res.json();
         const found = users.find(u => u.dni == dni);
-        if(found) { USER_DATA = found; startApp(); }
-        else { alert("DNI no registrado."); }
-    } catch(e) { alert("Error de conexión al servidor."); }
+        if(found) { 
+            USER_DATA = found; 
+            startApp(); 
+        } else { 
+            alert("DNI no registrado."); 
+        }
+    } catch(e) { 
+        alert("Error de conexión con la base de datos."); 
+    }
 }
 
 function startApp() {
     document.getElementById("login-screen").classList.add("hidden");
+    document.getElementById("register-screen").classList.add("hidden");
     document.getElementById("app-container").classList.remove("hidden");
     document.getElementById("prof-display").innerText = USER_DATA.nombre;
     document.getElementById("eess-display").innerText = USER_DATA.eess;
@@ -29,6 +44,9 @@ function startApp() {
 function validarYCalcular() {
     const pIn = document.getElementById("peso");
     let peso = parseFloat(pIn.value);
+    if(!peso) return;
+
+    // Autocorrección de gramos a kilos
     if(peso > 100) { peso = peso / 1000; pIn.value = peso.toFixed(1); }
 
     const esc = document.getElementById("esquema").value;
@@ -40,6 +58,7 @@ function validarYCalcular() {
         let mgDia = peso * parseFloat(esc);
         let dosis = ""; let f1 = 0;
 
+        // Alertas de seguridad NTS
         if (tipo.includes("_g") && peso >= 12) {
             msg.innerHTML = "⚠️ <b style='color:red'>AVISO:</b> Sugiero Jarabe por el peso.";
         } else if (tipo.includes("_j") && peso < 8) {
@@ -73,7 +92,6 @@ async function registrarYReiniciar() {
         action: "registro_consulta",
         userDni: USER_DATA.dni,
         userName: USER_DATA.nombre,
-        userCel: USER_DATA.cel || "",
         userEess: USER_DATA.eess,
         peso: document.getElementById("peso").value,
         esquema: document.getElementById("esquema").options[document.getElementById("esquema").selectedIndex].text,
@@ -85,25 +103,21 @@ async function registrarYReiniciar() {
     try {
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
         
-        // Contador visual
+        // Actualizar contador en KeyValue
         try {
             const rCount = await fetch(KV_URL);
-            const val = parseInt(await rCount.text()) || 0;
+            let val = parseInt(await rCount.text()) || 0;
             await fetch(KV_URL + "/" + (val + 1), { method: 'POST' });
         } catch(e) {}
 
-        alert("✅ Registro guardado. El sistema se limpiará para el próximo paciente.");
+        alert("✅ Registro guardado con éxito.");
     } catch (e) {
-        alert("⚠️ Error de conexión, pero el formulario se reiniciará.");
+        alert("⚠️ Registro enviado (Verificar conexión).");
     } finally {
-        // LIMPIEZA TOTAL TRAS DAR "ACEPTAR"
         btn.innerText = "💾 CONFIRMAR Y GUARDAR (OK)";
         btn.disabled = false;
         document.getElementById("peso").value = "";
-        document.getElementById("esquema").selectedIndex = 0;
-        document.getElementById("tipoHierro").selectedIndex = 0;
         document.getElementById("result-card").classList.add("hidden");
-        document.getElementById("global-msg").innerText = "Complete los datos para calcular.";
         updatePuntos();
     }
 }
@@ -124,25 +138,33 @@ async function crearCuentaPropia() {
         distrito: document.getElementById("reg-distrito").value,
         eess: document.getElementById("reg-eess").value
     };
-    
-    if(!payload.dni || !payload.nombre) {
-        alert("DNI y Nombre son obligatorios");
-        btn.disabled = false;
-        btn.innerText = "FINALIZAR REGISTRO";
-        return;
-    }
 
     try {
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-        alert("✅ Registro de usuario enviado.");
-        location.reload();
-    } catch(e) { 
-        alert("Error al registrar usuario."); 
+        alert("✅ Cuenta solicitada. Ya puede intentar iniciar sesión.");
+        mostrarLogin();
+    } catch(e) {
+        alert("Error al enviar registro.");
+    } finally {
+        btn.innerText = "FINALIZAR REGISTRO";
         btn.disabled = false;
-        btn.innerText = "FINALIZAR REGISTRO"; 
     }
 }
 
-async function updatePuntos() { const r = await fetch(KV_URL); const t = await r.text(); document.getElementById("numConsultas").innerText = t || 0; }
-function mostrarRegistro() { document.getElementById("login-screen").classList.add("hidden"); document.getElementById("register-screen").classList.remove("hidden"); }
-function mostrarLogin() { document.getElementById("register-screen").classList.add("hidden"); document.getElementById("login-screen").classList.remove("hidden"); }
+async function updatePuntos() { 
+    try {
+        const r = await fetch(KV_URL); 
+        const t = await r.text(); 
+        document.getElementById("numConsultas").innerText = t || 0; 
+    } catch(e) {}
+}
+
+function mostrarRegistro() { 
+    document.getElementById("login-screen").classList.add("hidden"); 
+    document.getElementById("register-screen").classList.remove("hidden"); 
+}
+
+function mostrarLogin() { 
+    document.getElementById("register-screen").classList.add("hidden"); 
+    document.getElementById("login-screen").classList.remove("hidden"); 
+}
