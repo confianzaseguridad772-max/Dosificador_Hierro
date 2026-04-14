@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SISTEMA HIERRO V7 - PRO</title>
+    <title>DOSIS HIERRO</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -15,11 +15,11 @@
         <div id="login-screen" class="glass-card">
             <header class="main-header">
                 <div style="font-size: 40px; margin-bottom: 10px;">🏥</div>
-                <h1>SISTEMA<span>HIERRO</span></h1>
-                <p>Versión Profesional 2026</p>
+                <h1>DOSIS<span>HIERRO</span></h1>
+                <p>Versión Profesional</p>
             </header>
             <div style="margin-top: 25px; text-align: left;">
-                <label style="font-size: 11px; font-weight: 800; color: #00a8ad;">DNI DEL PROFESIONAL</label>
+                <label style="font-size: 11px; font-weight: 800; color: #00a8ad;">USUARIO</label>
                 <input type="number" id="user-input" placeholder="Ingrese su DNI">
             </div>
             <button class="btn-main" onclick="intentarLogin()">INICIAR SESIÓN</button>
@@ -28,18 +28,18 @@
         </div>
 
         <div id="register-screen" class="glass-card hidden">
-            <h2>NUEVO REGISTRO</h2>
+            <h2>NUEVO USUARIO</h2>
             <div class="grid-form">
                 <input type="number" id="reg-dni" placeholder="Número de DNI">
                 <input type="text" id="reg-nombre" placeholder="Nombre Completo">
-                <input type="text" id="reg-profesion" placeholder="Profesión / Cargo">
-                <input type="number" id="reg-cel" placeholder="Celular de contacto">
+                <input type="text" id="reg-profesion" placeholder="Cargo">
+                <input type="number" id="reg-cel" placeholder="N° de Celular">
                 <input type="text" id="reg-region" placeholder="Región">
                 <input type="text" id="reg-provincia" placeholder="Provincia">
                 <input type="text" id="reg-distrito" placeholder="Distrito">
-                <input type="text" id="reg-eess" placeholder="Nombre de EESS">
+                <input type="text" id="reg-eess" placeholder="EESS">
             </div>
-            <button class="btn-main" id="btnReg" onclick="crearCuentaPropia()">FINALIZAR REGISTRO</button>
+            <button class="btn-main" id="btnReg" onclick="crearCuentaPropia()">REGISTRARME</button>
             <button class="btn-text" onclick="mostrarLogin()">Volver al Inicio</button>
         </div>
 
@@ -86,11 +86,11 @@
                     <h2 id="resDosis">---</h2>
                 </div>
                 <div style="background: #fff; border-radius: 15px; padding: 10px; margin-top: 10px;">
-                    <div class="proy-item"><span>1 MES</span><b id="m1">-</b></div>
-                    <div class="proy-item"><span>2 MESES</span><b id="m2">-</b></div>
-                    <div class="proy-item"><span>3 MESES</span><b id="m3">-</b></div>
+                    <div class="proy-item"><span> PARA 01 MES</span><b id="m1">-</b></div>
+                    <div class="proy-item"><span>PARA 02 MESES</span><b id="m2">-</b></div>
+                    <div class="proy-item"><span>PARA 03 MESES</span><b id="m3">-</b></div>
                 </div>
-                <button id="okBtn" class="btn-confirm" onclick="registrarYReiniciar()">💾 GUARDAR CONSULTA</button>
+                <button id="okBtn" class="btn-confirm" onclick="registrarYReiniciar()">NUEVA CONSULTA</button>
             </div>
         </div>
     </div>
