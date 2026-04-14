@@ -33,23 +33,23 @@
                 <h2>NUEVO REGISTRO</h2>
             </header>
             <div class="grid-form">
-                <input type="number" id="reg-dni" placeholder="DNI (Obligatorio)">
+                <input type="number" id="reg-dni" placeholder="DNI (OBLIGATORIO)">
                 <input type="text" id="reg-nombre" placeholder="Nombre y Apellidos">
                 <input type="text" id="reg-profesion" placeholder="Profesión">
                 <input type="number" id="reg-cel" placeholder="Celular">
-                <input type="text" id="reg-eess" placeholder="Establecimiento (EESS)">
-                <input type="text" id="reg-region" placeholder="Región">
-                <input type="text" id="reg-provincia" placeholder="Provincia">
-                <input type="text" id="reg-distrito" placeholder="Distrito">
+                <input type="text" id="reg-region" placeholder="📍 Región">
+                <input type="text" id="reg-provincia" placeholder="📍 Provincia">
+                <input type="text" id="reg-distrito" placeholder="📍 Distrito">
+                <input type="text" id="reg-eess" placeholder="🏥 Establecimiento (EESS)">
             </div>
-            <button class="btn-main" id="btnReg" onclick="crearCuentaPropia()">FINALIZAR REGISTRO</button>
+            <button class="btn-main" id="btnReg" onclick="crearCuentaPropia()">🚀 FINALIZAR REGISTRO</button>
             <button class="btn-text" onclick="mostrarLogin()">Volver al Inicio</button>
         </div>
 
         <div id="app-container" class="glass-card hidden">
             <header class="app-header">
                 <div class="user-info">
-                    <span>🩺 <span id="prof-display">Bienvenido</span></span>
+                    <span>🩺 <span id="prof-display">Cargando...</span></span>
                     <small id="eess-display">Establecimiento</small>
                 </div>
                 <div class="stats-badge">CONSULTAS: <b id="numConsultas">0</b></div>
@@ -86,7 +86,7 @@
 
                 <div id="result-card" class="result-section hidden">
                     <div class="res-main">
-                        <small>DOSIS DIARIA</small>
+                        <small>DOSIS DIARIA RECOMENDADA</small>
                         <h2 id="resDosis">---</h2>
                     </div>
                     
