@@ -1,9 +1,9 @@
 :root {
-    --turquesa: #00f2ff; /* Turquesa más vibrante */
+    --turquesa: #00f2ff;
     --turquesa-dark: #00a8ad;
     --dark: #0f172a;
-    --glass: rgba(255, 255, 255, 0.85);
-    --neon-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+    --glass: rgba(255, 255, 255, 0.88);
+    --neon-shadow: 0 10px 40px rgba(0, 242, 255, 0.2);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -12,146 +12,157 @@ body {
     font-family: 'Outfit', sans-serif; 
     background: #000; 
     height: 100vh; 
+    width: 100vw;
     display: flex; 
     align-items: center; 
     justify-content: center; 
     overflow: hidden; 
 }
 
-/* Fondo con efecto de profundidad */
+/* Fondo con imagen */
 #bg-peru { 
     position: fixed; 
-    width: 100%; 
-    height: 100%; 
+    top: 0; left: 0;
+    width: 100%; height: 100%; 
     z-index: -2; 
-    transform: scale(1.1); /* Ligero zoom para evitar bordes blancos */
-    transition: transform 2s ease;
+    background-size: cover !important;
+    background-position: center !important;
 }
 
 .overlay { 
     position: fixed; 
-    width: 100%; 
-    height: 100%; 
-    background: radial-gradient(circle, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 100%); 
+    width: 100%; height: 100%; 
+    background: radial-gradient(circle, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%); 
     z-index: -1; 
 }
 
+/* Contenedor Principal: Asegura que no se amontonen */
 .container { 
     width: 100%; 
-    display: flex; 
-    justify-content: center; 
-    padding: 15px; 
-    perspective: 1000px; /* Efecto 3D para la tarjeta */
+    max-width: 420px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
+/* Tarjeta de Cristal Única */
 .glass-card {
     background: var(--glass);
-    backdrop-filter: blur(15px); /* Efecto de desenfoque de fondo */
-    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     width: 100%;
-    max-width: 420px;
-    padding: 35px 25px; 
-    border-radius: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 25px 50px rgba(0,0,0,0.6), var(--neon-shadow);
+    padding: 30px; 
+    border-radius: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.4), var(--neon-shadow);
     text-align: center;
-    position: relative;
-    max-height: 90vh;
-    overflow-y: auto;
-    animation: cardEntrance 0.8s ease-out; /* Animación de entrada */
+    animation: fadeIn 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-@keyframes cardEntrance {
-    from { opacity: 0; transform: translateY(30px) rotateX(-5deg); }
-    to { opacity: 1; transform: translateY(0) rotateX(0); }
+/* Ocultar secciones no activas */
+.hidden { display: none !important; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-/* Cabeceras elegantes */
-.main-header h1 { 
-    color: var(--dark); 
+/* Títulos con Gradiente */
+h1, h2 { 
     font-weight: 900; 
-    font-size: 32px; 
-    letter-spacing: -1.5px;
-    background: linear-gradient(90deg, #008b8b, #00f2ff);
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, var(--dark), var(--turquesa-dark));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
 }
 
-.main-header p { font-size: 12px; font-weight: 600; color: #64748b; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
+/* Formulario Estilizado */
+.grid-form { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 12px; 
+    margin-top: 20px;
+}
 
-/* Inputs con estilo moderno */
-.field { margin-top: 20px; text-align: left; }
-label { font-size: 10px; font-weight: 800; color: var(--turquesa-dark); letter-spacing: 1px; text-transform: uppercase; margin-left: 5px; }
+/* Campos especiales que ocupan todo el ancho */
+#reg-dni, #reg-nombre, .full-width { grid-column: span 2; }
 
 input, select {
-    width: 100%; padding: 14px; margin-top: 8px;
-    border-radius: 16px; border: 1px solid rgba(0,0,0,0.1);
-    font-size: 16px; outline: none; background: rgba(255,255,255,0.8);
-    transition: all 0.3s ease;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+    width: 100%; padding: 14px;
+    border-radius: 16px; border: 1.5px solid rgba(0,0,0,0.08);
+    font-size: 15px; outline: none; 
+    background: rgba(255,255,255,0.7);
+    font-family: 'Outfit', sans-serif;
+    transition: 0.3s ease;
 }
 
 input:focus, select:focus { 
     border-color: var(--turquesa); 
     background: #fff;
-    box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
-    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
 }
 
-/* Botones con efecto Glow */
+/* Botón Principal Pro */
 .btn-main {
-    background: linear-gradient(135deg, var(--turquesa) 0%, var(--turquesa-dark) 100%);
-    color: #fff;
-    border: none; padding: 18px; width: 100%;
-    border-radius: 18px; font-weight: 900; font-size: 16px;
-    margin-top: 25px; cursor: pointer;
-    box-shadow: 0 10px 20px rgba(0, 206, 209, 0.3);
-    transition: 0.3s;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-}
-
-.btn-main:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(0, 206, 209, 0.4); }
-
-.btn-confirm { 
-    background: #0f172a; color: #fff; 
-    border: 1px solid var(--turquesa); 
-    padding: 18px; width: 100%; border-radius: 18px; 
-    font-weight: 900; cursor: pointer; margin-top: 20px;
+    background: var(--dark);
+    color: var(--turquesa);
+    border: 1px solid var(--turquesa);
+    padding: 18px; width: 100%;
+    border-radius: 20px; font-weight: 800; font-size: 15px;
+    margin-top: 20px; cursor: pointer;
+    text-transform: uppercase; letter-spacing: 1px;
     transition: 0.3s;
 }
 
-.btn-confirm:hover { background: #1e293b; border-color: #fff; }
-
-/* Dashboard Mini Header */
-.app-header { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.5); padding: 12px; border-radius: 20px; margin-bottom: 20px; }
-.stats-badge { background: #0f172a; color: var(--turquesa); padding: 8px 15px; border-radius: 14px; font-size: 10px; font-weight: 900; border: 1px solid var(--turquesa); }
-
-/* Sección de Resultados Impresionante */
-.result-section { 
-    margin-top: 25px; padding-top: 25px; 
-    border-top: 2px solid rgba(0, 242, 255, 0.2); 
-    animation: fadeIn 0.5s ease;
+.btn-main:hover {
+    background: var(--turquesa);
+    color: var(--dark);
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
 }
 
-@keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-
-.res-main { 
-    background: linear-gradient(180deg, #f0fdfa 0%, #ccfbf1 100%); 
-    padding: 20px; border-radius: 20px; border: 1px solid var(--turquesa);
+/* Dashboard Header */
+.app-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px; padding-bottom: 15px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
-.res-main h2 { font-size: 38px; color: #0f172a; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+.stats-badge {
+    background: var(--dark); color: var(--turquesa);
+    padding: 6px 12px; border-radius: 12px; font-size: 10px; font-weight: 900;
+}
 
-.res-proyeccion { background: rgba(255,255,255,0.5); border-radius: 20px; padding: 15px; margin-top: 15px; }
-.proy-item { display: flex; justify-content: space-between; padding: 12px 10px; border-bottom: 1px solid rgba(0,0,0,0.05); }
-.proy-item:last-child { border-bottom: none; }
-.proy-item span { font-weight: 700; color: #64748b; font-size: 13px; }
-.proy-item b { color: #0f172a; font-size: 15px; }
+/* Caja de Resultados */
+.result-section {
+    margin-top: 25px; padding: 20px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 24px;
+    border: 1px solid var(--turquesa);
+}
 
-/* Grid de Registro Optimizado */
-.grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-#reg-dni, #reg-nombre { grid-column: span 2; }
+.res-main h2 { 
+    font-size: 42px; 
+    -webkit-text-fill-color: initial; 
+    color: var(--dark); 
+}
 
-/* Scrollbar invisible pero funcional */
-.glass-card::-webkit-scrollbar { width: 4px; }
-.glass-card::-webkit-scrollbar-thumb { background: var(--turquesa); border-radius: 10px; }
+.proy-item {
+    display: flex; justify-content: space-between;
+    padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05);
+    font-size: 14px; font-weight: 600;
+}
+
+.btn-confirm {
+    background: linear-gradient(135deg, var(--turquesa-dark), #000);
+    color: #fff; border: none; padding: 18px;
+    width: 100%; border-radius: 20px; font-weight: 800;
+    margin-top: 15px; cursor: pointer;
+}
+
+.btn-text {
+    background: none; border: none; color: #64748b;
+    margin-top: 15px; font-size: 13px; cursor: pointer;
+    text-decoration: underline;
+}
