@@ -1,4 +1,4 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby6T_7pe6dGue2CTFl9xQpE2q1AWrzXRCMq5EOGTjovwoqGIk7gRyYfTCZBMcNY5-9AyA/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzgUu7qL478M81j-h4WGTpi7kfcxY-RDf7HXImMk5WOLrpvuQUkUTPzAZtJCdWObZwzhA/exec";
 const KV_URL = "https://api.keyvalue.xyz/77e68224/puntosGustavo2026";
 let USER_DATA = null;
 
@@ -40,13 +40,12 @@ function validarYCalcular() {
         let mgDia = peso * parseFloat(esc);
         let dosis = ""; let f1 = 0;
 
-        // Alertas Originales
         if (tipo.includes("_g") && peso >= 12) {
             msg.innerHTML = "⚠️ <b style='color:red'>AVISO:</b> Sugiero Jarabe por el peso.";
         } else if (tipo.includes("_j") && peso < 8) {
             msg.innerHTML = "⚠️ <b style='color:orange'>AVISO:</b> Sugiero Gotas por el peso.";
         } else {
-            msg.innerText = "Dosis calculada según NTS 213-2024.";
+            msg.innerText = "Cálculo optimizado (NTS 213-2024).";
         }
 
         switch(tipo) {
@@ -67,8 +66,9 @@ function validarYCalcular() {
 
 async function registrarYReiniciar() {
     const btn = document.getElementById("okBtn");
-    btn.innerText = "GUARDANDO...";
-    
+    btn.innerText = "💾 GUARDANDO...";
+    btn.disabled = true;
+
     const payload = {
         action: "registro_consulta",
         userDni: USER_DATA.dni,
@@ -81,24 +81,50 @@ async function registrarYReiniciar() {
         total: document.getElementById("m1").innerText
     };
 
-    fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
-    .then(() => fetch(KV_URL).then(r => r.text()).then(t => fetch(`${KV_URL}/${parseInt(t)+1}`,{method:'POST'})))
-    .then(() => { alert("Guardado!"); location.reload(); });
+    try {
+        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+        
+        // Sumar punto
+        const rCount = await fetch(KV_URL);
+        const val = parseInt(await rCount.text()) || 0;
+        await fetch(KV_URL + "/" + (val + 1), { method: 'POST' });
+
+        alert("¡Registro Exitoso!");
+        // Reset de campos y botón
+        btn.innerText = "💾 CONFIRMAR Y GUARDAR (OK)";
+        btn.disabled = false;
+        document.getElementById("peso").value = "";
+        document.getElementById("result-card").classList.add("hidden");
+        updatePuntos();
+    } catch (e) {
+        alert("Error al guardar.");
+        btn.disabled = false;
+        btn.innerText = "💾 CONFIRMAR Y GUARDAR (OK)";
+    }
 }
 
 async function crearCuentaPropia() {
+    const btn = document.getElementById("btnReg");
+    btn.innerText = "ENVIANDO...";
     const payload = {
         action: "crear",
         dni: document.getElementById("reg-dni").value,
         nombre: document.getElementById("reg-nombre").value,
         prof: document.getElementById("reg-profesion").value,
         cel: document.getElementById("reg-cel").value,
-        eess: document.getElementById("reg-eess").value
+        eess: document.getElementById("reg-eess").value,
+        region: document.getElementById("reg-region").value,
+        provincia: document.getElementById("reg-provincia").value,
+        distrito: document.getElementById("reg-distrito").value
     };
+    
     if(!payload.dni) return alert("DNI Obligatorio");
 
-    fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
-    .then(() => { alert("Registro Enviado!"); location.reload(); });
+    try {
+        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+        alert("Solicitud enviada.");
+        location.reload();
+    } catch(e) { alert("Error."); btn.innerText = "FINALIZAR REGISTRO"; }
 }
 
 async function updatePuntos() { const r = await fetch(KV_URL); const t = await r.text(); document.getElementById("numConsultas").innerText = t || 0; }
