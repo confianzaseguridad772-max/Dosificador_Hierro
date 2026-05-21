@@ -1,4 +1,4 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxprAOnhlcpo44O2YZglBQTR6zbHiDjYLyaxkPfD1V1ahjb40kU3Tmw8wnq51AREPRtBw/exec"; 
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyUS9u9m5AtRFP0S2RYWlGna5QwuRcNGgHvfA62MKXTtrTPlv2N66EXdSLL2opTbWpi/exec"; 
 const KV_URL = "https://api.keyvalue.xyz/77e68224/puntosGustavo2026";
 let USER_DATA = null;
 
